@@ -3,10 +3,23 @@
   hosts: kaggle
   remote_user: root
   tasks:
+  - name: Create apache group
+    group:
+      name: apache
+      state: present
+  - name: Add root to apache group
+    user:
+      name: root
+      groups:
+        - apache
+        - sudo
+      append: yes
   - name: Create user thomas
     user:
       name: thomas
-      groups: sudo
+      groups:
+        - sudo
+        - apache
   - name: Create .ssh folder
     file:
       path: ~thomas/.ssh
@@ -41,12 +54,44 @@
         - python3-pip
         - python3-tk
       update_cache: yes
+  - name: Install web servers deps
+    apt:
+      name:
+        - apache2
+  - name: Give apache group access to www
+    file:
+      name: /var/www/
+      recurse: yes
+      group: apache
+      owner: root
+      mode: 0775
+  - name: Upload index.html
+    copy:
+      src: index.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: apache
+      mode: 0774
+  - name: Upload httpd.conf
+    copy:
+      src: httpd.conf
+      dest: /etc/apache2/httpd.conf
+      owner: root
+      group: apache
+  - name: Create /var/www/img folder
+    file:
+      path: /var/www/img
+      state: directory
+      owner: thomas
+      group: apache
+      mode: 0774
   - name: Install system deps
     apt:
       name:
         - sudo
         - zip
         - unzip
+        - git
 - name: Install datascience tools
   hosts: kaggle
   tasks:

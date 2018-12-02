@@ -109,5 +109,8 @@
         - ipython
         - kaggle
         - statsmodels
+        - Pillow
+        - requests
+        - bs4
       extra_args: --user
       executable: pip3

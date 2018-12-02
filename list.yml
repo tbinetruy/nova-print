@@ -1,0 +1,68 @@
+---
+- name: Create user
+  hosts: kaggle
+  remote_user: root
+  tasks:
+  - name: Create user thomas
+    user:
+      name: thomas
+      groups: sudo
+  - name: Create .ssh folder
+    file:
+      path: ~thomas/.ssh
+      state: directory
+      owner: thomas
+      group: thomas
+      mode: 0700
+  - name: Upload SSH key
+    copy:
+      src: authorized_keys
+      dest: ~thomas/.ssh/authorized_keys
+      owner: thomas
+      group: thomas
+      mode: 0700
+  - name: Create .kaggle folder
+    file:
+      path: ~thomas/.kaggle
+      state: directory
+      owner: thomas
+      group: thomas
+      mode: 0700
+  - name: Upload Kaggle API token
+    copy:
+      src: ~/.kaggle/kaggle.json
+      dest: ~thomas/.kaggle/kaggle.json
+      owner: thomas
+      group: thomas
+      mode: 0700
+  - name: Install python deps
+    apt:
+      name:
+        - python3-pip
+        - python3-tk
+      update_cache: yes
+  - name: Install system deps
+    apt:
+      name:
+        - sudo
+        - zip
+        - unzip
+- name: Install datascience tools
+  hosts: kaggle
+  tasks:
+  - name: Install pip packages in user directory
+    become: yes
+    become_user: thomas
+    pip:
+      name:
+        - numpy
+        - scikit-learn
+        - matplotlib
+        - scipy
+        - pandas
+        - seaborn
+        - ipython
+        - kaggle
+        - statsmodels
+      extra_args: --user
+      executable: pip3

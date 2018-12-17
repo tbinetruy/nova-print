@@ -1,5 +1,5 @@
 ---
-- name: Create user
+- name: Boostrap Nova Print server
   hosts: nova-print
   remote_user: root
   tasks:

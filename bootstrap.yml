@@ -172,6 +172,14 @@
       dest: /etc/nginx/sites-available/
   - name: Symlink nova_print_nginx.conf so nginx can see it 
     file:
-      src: ~/etc/nginx/sites-available/nova_print_nginx.conf
-      dest: /etc/nginx/sites-enabled/
+      src: /etc/nginx/sites-available/nova_print_nginx.conf
+      dest: /etc/nginx/sites-enabled/nova_print_nginx.conf
       state: link
+  - name: Upload nova_print_wsgi.ini
+    copy:
+      src: ~/code/nova-print/nova_print_uwsgi.ini
+      dest: /home/thomas/nova-print/nova_print/
+  - name: Upload emperor.uwsgi.service
+    copy:
+      src: ~/code/nova-print/emperor.uwsgi.service
+      dest: /etc/systemd/system/emperor.uwsgi.service

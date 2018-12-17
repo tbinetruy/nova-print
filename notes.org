@@ -1,0 +1,6 @@
+Goal of the playbook is to bootstrap server in order to be able to to run this:
+
+#+BEGIN_SRC bash
+emacs test.org --batch --eval '(progn (load-file "~/.emacs.d/nova-print/main.el")(nova-print//export))' --kill
+#+END_SRC
+

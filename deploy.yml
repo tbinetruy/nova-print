@@ -1,0 +1,177 @@
+---
+- name: Create user
+  hosts: nova-print
+  remote_user: root
+  tasks:
+  - name: Create apache group
+    group:
+      name: apache
+      state: present
+  - name: Create sudo group
+    group:
+      name: sudo
+      state: present
+  - name: Add root to apache group
+    user:
+      name: root
+      groups:
+        - apache
+        - sudo
+      append: yes
+  - name: Create user thomas
+    user:
+      name: thomas
+      groups:
+        - sudo
+        - apache
+  - name: Create .ssh folder
+    file:
+      path: ~thomas/.ssh
+      state: directory
+      owner: thomas
+      group: thomas
+      mode: 0700
+  - name: Upload SSH key
+    copy:
+      src: authorized_keys
+      dest: ~thomas/.ssh/authorized_keys
+      owner: thomas
+      group: thomas
+      mode: 0700
+  - name: Install python deps
+    pacman:
+      name:
+        - python
+        - python-pip
+  - name: Install web servers deps
+    pacman:
+      name:
+        - apache
+        - nginx
+  - name: Give apache group access to www
+    file:
+      name: /var/www/
+      recurse: yes
+      group: apache
+      owner: root
+      mode: 0775
+  - name: Create /var/www/html folder
+    file:
+      path: /var/www/html/
+      state: directory
+      owner: root
+      group: apache
+      mode: 0775
+  - name: Upload index.html
+    copy:
+      src: index.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: apache
+      mode: 0774
+  - name: Upload httpd.conf
+    copy:
+      src: httpd.conf
+      dest: /etc/httpd/conf/httpd.conf
+      owner: root
+      group: apache
+  - name: Create /var/www/img folder
+    file:
+      path: /var/www/img
+      state: directory
+      owner: thomas
+      group: apache
+      mode: 0774
+  - name: Install system deps
+    pacman:
+      name:
+        - sudo
+        - zip
+        - unzip
+        - git
+        - emacs
+        - base-devel
+  - name: Upload sudoers
+    copy:
+      src: sudoers
+      dest: /etc/sudoers
+      owner: root
+      group: root
+      mode: 0640
+  - name: remove yay source folder
+    file:
+      state: absent
+      path: ~thomas/yay/
+  - name: Install yay as thomas
+    become: yes
+    become_user: thomas
+    raw: cd ~thomas/ && git clone https://aur.archlinux.org/yay.git && cd yay && makepkg -si --noconfirm
+  - name: Install pdftk
+    become: yes
+    become_user: thomas
+    raw: yay -S --noconfirm pdftk-bin
+  - name: Install princexml
+    become: yes
+    become_user: thomas
+    raw: yay -S --noconfirm princexml
+  - name: Install princexml font dependencies
+    become: yes
+    become_user: thomas
+    raw: yay -S --noconfirm ttf-ms-fonts
+  - name: Copy nova-print emacs deps
+    become: yes
+    become_user: thomas
+    copy:
+      src: ~/.emacs.d/nova-print
+      dest: ~thomas/.emacs.d/
+  - name: Upload nova-print sources
+    copy:
+      src: ~/config/spacemacs/nova-print/main.el
+      dest: ~thomas/.emacs.d/nova-print/ 
+      owner: thomas
+- name: Install django related stuff
+  hosts: nova-print
+  tasks:
+  - name: Install pip packages in user directory
+    become: yes
+    become_user: thomas
+    pip:
+      name:
+        - django
+        - uwsgi
+      extra_args: --user
+
+
+
+
+  - name: Upload .bashrc
+    copy:
+      src: ~/code/nova-print/.bashrc
+      dest: ~thomas/.bashrc 
+      owner: thomas
+  - name: Upload nova_print django project sources
+    copy:
+      src: ~/code/nova-print/nova_print
+      dest: ~thomas/nova-print/ 
+      owner: thomas
+  - name: Enable nginx service
+    systemd:
+      enabled: yes
+      name: nginx
+  - name: Create /etc/nginx/sites-available folder
+    file:
+      path: /etc/nginx/sites-available/
+      state: directory
+  - name: Create /etc/nginx/sites-enabled folder
+    file:
+      path: /etc/nginx/sites-enabled/
+      state: directory
+  - name: Upload nova_print_nginx.conf
+    copy:
+      src: ~/code/nova-print/nova_print_nginx.conf
+      dest: /etc/nginx/sites-available/
+  - name: Symlink nova_print_nginx.conf so nginx can see it 
+    file:
+      src: ~/etc/nginx/sites-available/nova_print_nginx.conf
+      dest: /etc/nginx/sites-enabled/
+      state: link

@@ -3,19 +3,14 @@
   hosts: nova-print
   remote_user: root
   tasks:
-  - name: Create apache group
-    group:
-      name: apache
-      state: present
   - name: Create sudo group
     group:
       name: sudo
       state: present
-  - name: Add root to apache group
+  - name: Add root to sudo group
     user:
       name: root
       groups:
-        - apache
         - sudo
       append: yes
   - name: Create user thomas
@@ -23,7 +18,6 @@
       name: thomas
       groups:
         - sudo
-        - apache
   - name: Create .ssh folder
     file:
       path: ~thomas/.ssh
@@ -46,42 +40,7 @@
   - name: Install web servers deps
     pacman:
       name:
-        - apache
         - nginx
-  - name: Give apache group access to www
-    file:
-      name: /var/www/
-      recurse: yes
-      group: apache
-      owner: root
-      mode: 0775
-  - name: Create /var/www/html folder
-    file:
-      path: /var/www/html/
-      state: directory
-      owner: root
-      group: apache
-      mode: 0775
-  - name: Upload index.html
-    copy:
-      src: index.html
-      dest: /var/www/html/index.html
-      owner: root
-      group: apache
-      mode: 0774
-  - name: Upload httpd.conf
-    copy:
-      src: httpd.conf
-      dest: /etc/httpd/conf/httpd.conf
-      owner: root
-      group: apache
-  - name: Create /var/www/img folder
-    file:
-      path: /var/www/img
-      state: directory
-      owner: thomas
-      group: apache
-      mode: 0774
   - name: Install system deps
     pacman:
       name:
@@ -140,10 +99,6 @@
         - django
         - uwsgi
       extra_args: --user
-
-
-
-
   - name: Upload .bashrc
     copy:
       src: ~/code/nova-print/.bashrc

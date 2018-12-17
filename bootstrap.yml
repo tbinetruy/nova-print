@@ -138,3 +138,7 @@
     copy:
       src: ~/code/nova-print/emperor.uwsgi.service
       dest: /etc/systemd/system/emperor.uwsgi.service
+  - name: Enable emperor.uwsgi.service
+    systemd:
+      enabled: yes
+      name: emperor.uwsgi.service

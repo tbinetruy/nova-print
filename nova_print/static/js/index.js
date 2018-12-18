@@ -18,13 +18,35 @@ function column(props) {
 `;
 }
 
+function row(props) {
+  return `
+<div class='row' id='${props.id}'>
+    ${props.children.join("")}
+</div>
+`;
+}
+
+function iframe(props) {
+  return `
+<iframe src="${props.url}">
+</iframe>
+`;
+}
+
 function appDumb(props) {
   const b = button({title: "Submit", id: props.submitId});
   const t = textarea({
     id: props.textareaId,
     value: props.textareaValue,
   });
-  const children = [t, b];
+  const i = iframe({
+    url: "/static/output.pdf",
+  });
+  const r = row({
+    children: [t, i],
+    id: "main-panel",
+  });
+  const children = [r, b];
 
   return `
 <div>
@@ -65,8 +87,9 @@ class App {
     this.getSubmitButton().onclick = this.submit.bind(this);
   }
   async submit() {
+    const org = this.getTextarea().value;
     const data = {
-      org: this.getTextarea().value,
+      org,
     };
     const options = {
       method: "POST",
@@ -77,7 +100,7 @@ class App {
       },
     };
     const resp = await fetch("/submit", options);
-    this.state.textareaValue = await resp.text();
+    this.state.textareaValue = org;
 
     this.render();
   }

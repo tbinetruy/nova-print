@@ -2,11 +2,25 @@ html {
     color: red;
 }
 
-.col {
+.row, .col {
     display: flex;
+}
+
+.col {
     flex-direction: column;
 }
 
+.row {
+    flex-direction: row;
+}
+
 textarea {
-    height: 30vh
+}
+
+textarea, iframe {
+    flex: 1;
+}
+
+#main-panel {
+    height: 70vh
 }

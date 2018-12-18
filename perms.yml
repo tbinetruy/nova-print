@@ -1,0 +1,16 @@
+- name: Setup nginx perms
+  hosts: nova-print
+  remote_user: root
+  tasks:
+  - name: Add nova_print to http group
+    file:
+      path: /home
+      group: http
+      owner: thomas
+      recurse: yes
+      mode: 0770 
+  - name: adding existing user thomas to group http
+    user:
+      name: thomas
+      groups: http
+      append: yes

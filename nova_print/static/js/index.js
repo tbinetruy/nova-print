@@ -139,14 +139,63 @@ function readCookie(name) {
   return null;
 }
 
+const defaultText = `
+
+* Introduction
+
+Where are we at ? Maybe here: [[https://github.com/mecs13/NOVAPROPOSALBUILDING/doc/manual.pdf][Nova export manual]]
+
+* Desgin
+
+So that's how we do ordered bullet points:
+
+1. food
+2. fun
+3. idk
+
+As opposed to unordered bullet points:
+
+- foo
+- baring
+- again
+
+** We can have Title 2's
+
+*** And Title 3's
+
+**** Even Title 4's actually
+
+* Tables
+
+Tables are a little fun because we can caption them:
+
+
+#+CAPTION: "Yay a table !!"
+#+NAME: table-1
+| Col1     | and 2   | and 3        | 4      | 5        |
+|----------+---------+--------------+--------+----------|
+| and then | some    | explanations | here   | and      |
+| there.   | But yay | VR           | anyway | right ?? |
+| foo      | baring  | again        | lorem  | ipsum    |
+
+
+And we can refer to them as such: Table [[table-1]] (you can even click on the number on the PDF !!).
+
+{{{pagebreak}}}
+
+* And pagebreaks should work :)
+
+`;
+
 class App {
   constructor(props) {
     this.props = props;
     this.mp = document.getElementById("mountpoint");
     this.state = {
-      textareaValue: "Enter orgmode here",
-      title: "title",
-      subtitle: "subtitle",
+      textareaValue: defaultText,
+      title: "Let There Be Light",
+      subtitle: "Nova Media",
+      color: "55a8e4",
     };
 
     this.render();

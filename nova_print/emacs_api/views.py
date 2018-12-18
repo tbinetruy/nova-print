@@ -3,12 +3,21 @@ from django.http import HttpResponse
 import subprocess
 from django.template import loader
 import json
+import os
 
-def create_pdf():
-
-    cmd = "cd /tmp && emacs output.org --batch --eval '(progn (load-file \"~/.emacs.d/nova-print/main.el\")(nova-print//export))' --kill"
+def create_pdf(filename):
+    cmd = f"cd /tmp && emacs {filename} --batch --eval '(progn (load-file \"~/.emacs.d/nova-print/main.el\")(nova-print//export))' --kill"
     sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     stdout = sp.communicate()[0]
+
+    target_path = os.environ.get(
+        'nova_print_pdf_target_dir',
+        '/home/thomas/nova-print/nova_print/static_root'
+        )
+    pdfname = filename.split('.')[0] + '.pdf'
+    cmd = f"cp /tmp/exports/{pdfname} {target_path}"
+    sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+
     return stdout
 
 def submit(request):
@@ -20,7 +29,7 @@ def submit(request):
     with open(f"/tmp/{filename}", "w") as text_file:
         text_file.write(org)
 
-    stdout = create_pdf()
+    stdout = create_pdf(filename)
 
     return HttpResponse(stdout)
 

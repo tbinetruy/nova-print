@@ -70,9 +70,15 @@ function iframe(props) {
 `;
 }
 
+function label(props) {
+  return `
+<label>${props.label}: </label>
+`;
+}
+
 function textbox(props) {
   return `
-<label>${props.label}: </label><input id="${props.id}" value="${props.value}" />
+${label(props)}<input id="${props.id}" value="${props.value}" />
 `;
 }
 
@@ -88,6 +94,17 @@ function dropdown(props) {
       )
       .join("")}
 </select>
+`;
+}
+
+function checkbox(props) {
+  console.log(props);
+  return `
+<div class="row">
+    <input id="${props.id}" type="checkbox" name="${props.name}" ${
+    props.isChecked ? "checked" : ""
+  }> ${props.label}
+</div>
 `;
 }
 
@@ -116,8 +133,19 @@ function appDumb(props) {
     id: "colors",
     value: props.colorValue,
   });
-  const doctype = dropdown({options: ["memo"], id: "doctype"});
-  const headerInfo = column({children: [title, subtitle, colors, doctype]});
+  const doctype = dropdown({
+    options: ["memo", "proposal"],
+    id: "doctype",
+    value: props.doctype,
+  });
+  const toc = checkbox({
+    label: "Include table of content",
+    isChecked: props.toc,
+    id: "toc",
+  });
+  const headerInfo = column({
+    children: [title, subtitle, colors, doctype, toc],
+  });
   const children = [headerInfo, r, b];
 
   return `
@@ -196,6 +224,7 @@ class App {
       title: "Let There Be Light",
       subtitle: "Nova Media",
       color: "55a8e4",
+      toc: false,
     };
 
     this.render();
@@ -216,20 +245,21 @@ class App {
       doctype: document.getElementById("doctype").value,
       subtitle: document.getElementById("subtitle").value,
       color: document.getElementById("colors").value,
+      toc: document.getElementById("toc").checked,
     };
     return this.state;
   }
   getOrgData() {
     const text = this.getTextarea().value;
-    const {title, subtitle, doctype, color} = this.getHeaderInfo();
+    const {title, subtitle, doctype, color, toc} = this.getHeaderInfo();
 
     const header = `
 #+TITLE: ${subtitle} \n
-#+INCLUDE: "./nova-print/doctype-memo.org" \n
+#+INCLUDE: "./nova-print/doctype-${doctype}.org" \n
 {{{subtitle(${title})}}} \n
 {{{theme-color(${color})}}} \n
 
-`;
+${toc ? "#+TOC: headlines 2 \n" : ""}`;
 
     return header + text;
   }
@@ -245,6 +275,7 @@ class App {
         "Content-Type": "application/json",
         "X-CSRFToken": readCookie("csrftoken"),
       },
+      credentials: "include",
     };
     const resp = await fetch("/submit", options);
     this.state.textareaValue = this.getTextarea().value;
@@ -260,6 +291,8 @@ class App {
       titleValue: this.state.title,
       subtitleValue: this.state.subtitle,
       colorValue: this.state.color,
+      doctype: this.state.doctype,
+      toc: this.state.toc,
     });
 
     this.mp.innerHTML = html;

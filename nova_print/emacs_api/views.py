@@ -4,6 +4,7 @@ import subprocess
 from django.template import loader
 import json
 import os
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 def create_pdf(filename):
     cmd = f"cd /tmp && emacs {filename} --batch --eval '(progn (load-file \"~/.emacs.d/nova-print/main.el\")(nova-print//export))' --kill"
@@ -34,6 +35,7 @@ def submit(request):
     return HttpResponse(stdout)
 
 
+@ensure_csrf_cookie
 def index(request):
     template = loader.get_template('emacs_api/index.html')
 

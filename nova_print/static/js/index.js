@@ -1,52 +1,3 @@
-function button(props) {
-  return `<button id="${props.id}">${props.title}</button>`;
-}
-
-function textarea(props) {
-  return `
-<textarea id="${props.id}">
-    ${props.value}
-</textarea>
-`;
-}
-
-function column(props) {
-  return `
-<div class='col'>
-    ${props.children.join("")}
-</div>
-`;
-}
-
-function row(props) {
-  return `
-<div class='row' id='${props.id}'>
-    ${props.children.join("")}
-</div>
-`;
-}
-
-function iframe(props) {
-  return `
-<iframe src="${props.url}">
-</iframe>
-`;
-}
-
-function textbox(props) {
-  return `
-<label>${props.label}: </label><input id="${props.id}" />
-`;
-}
-
-function dropdown(props) {
-  return `
-<select>
-    ${props.options.map(e => `<option value="${e}">${e}</option>`).join("")}
-</select>
-`;
-}
-
 const colorList = [
   "002684",
   "0060c1",
@@ -84,6 +35,62 @@ const colorList = [
   "pi7654",
 ];
 
+function button(props) {
+  return `<button id="${props.id}">${props.title}</button>`;
+}
+
+function textarea(props) {
+  return `
+<textarea id="${props.id}">
+    ${props.value}
+</textarea>
+`;
+}
+
+function column(props) {
+  return `
+<div class='col'>
+    ${props.children.join("")}
+</div>
+`;
+}
+
+function row(props) {
+  return `
+<div class='row' id='${props.id}'>
+    ${props.children.join("")}
+</div>
+`;
+}
+
+function iframe(props) {
+  return `
+<iframe src="${props.url}">
+</iframe>
+`;
+}
+
+function textbox(props) {
+  return `
+<label>${props.label}: </label><input id="${props.id}" value="${props.value}" />
+`;
+}
+
+function dropdown(props) {
+  return `
+<select id="${props.id}" value="${props.value}">
+    ${props.options
+      .map(
+        e =>
+          `<option value="${e}" ${
+            props.value === e ? 'selected="selected"' : ""
+          }>${e}</option>`,
+      )
+      .join("")}
+</select>
+`;
+}
+
 function appDumb(props) {
   const b = button({title: "Submit", id: props.submitId});
   const t = textarea({
@@ -98,10 +105,18 @@ function appDumb(props) {
     id: "main-panel",
   });
 
-  const title = textbox({label: "Title", id: "title"});
-  const subtitle = textbox({label: "Subtitle", id: "subtitle"});
-  const colors = dropdown({options: colorList});
-  const doctype = dropdown({options: ["memo"]});
+  const title = textbox({label: "Title", id: "title", value: props.titleValue});
+  const subtitle = textbox({
+    label: "Subtitle",
+    id: "subtitle",
+    value: props.subtitleValue,
+  });
+  const colors = dropdown({
+    options: colorList,
+    id: "colors",
+    value: props.colorValue,
+  });
+  const doctype = dropdown({options: ["memo"], id: "doctype"});
   const headerInfo = column({children: [title, subtitle, colors, doctype]});
   const children = [headerInfo, r, b];
 
@@ -130,6 +145,8 @@ class App {
     this.mp = document.getElementById("mountpoint");
     this.state = {
       textareaValue: "Enter orgmode here",
+      title: "title",
+      subtitle: "subtitle",
     };
 
     this.render();
@@ -143,8 +160,32 @@ class App {
   bindSubmitButton() {
     this.getSubmitButton().onclick = this.submit.bind(this);
   }
+  getHeaderInfo() {
+    this.state = {
+      ...this.state,
+      title: document.getElementById("title").value,
+      doctype: document.getElementById("doctype").value,
+      subtitle: document.getElementById("subtitle").value,
+      color: document.getElementById("colors").value,
+    };
+    return this.state;
+  }
+  getOrgData() {
+    const text = this.getTextarea().value;
+    const {title, subtitle, doctype, color} = this.getHeaderInfo();
+
+    const header = `
+#+TITLE: ${subtitle} \n
+#+INCLUDE: "./nova-print/doctype-memo.org" \n
+{{{subtitle(${title})}}} \n
+{{{theme-color(${color})}}} \n
+
+`;
+
+    return header + text;
+  }
   async submit() {
-    const org = this.getTextarea().value;
+    const org = this.getOrgData();
     const data = {
       org,
     };
@@ -157,7 +198,7 @@ class App {
       },
     };
     const resp = await fetch("/submit", options);
-    this.state.textareaValue = org;
+    this.state.textareaValue = this.getTextarea().value;
 
     this.render();
   }
@@ -167,6 +208,9 @@ class App {
       submitId: this.props.submitId,
       textareaId: this.props.textareaId,
       textareaValue: this.state.textareaValue,
+      titleValue: this.state.title,
+      subtitleValue: this.state.subtitle,
+      colorValue: this.state.color,
     });
 
     this.mp.innerHTML = html;

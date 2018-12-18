@@ -25,7 +25,7 @@ SECRET_KEY = '--&5*@tv3d#c$_@i9-0bw&@i*7e&2++8462@di($roc9fc55!q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['212.47.232.156']
+ALLOWED_HOSTS = ['212.47.232.156', '127.0.0.1']
 
 
 # Application definition
@@ -54,7 +54,7 @@ ROOT_URLCONF = 'nova_print.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.realpath('.')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -118,4 +118,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "static_root/")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static/'),
+)

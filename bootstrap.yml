@@ -32,12 +32,24 @@
       owner: thomas
       group: thomas
       mode: 0700
-  - name: Install python deps
+  - name: Install pacman deps
     pacman:
       name:
         - python
         - python-pip
         - rsync
+        - postgresql
+  - name: Give postgresql ownership of /var/lib/postgres/data
+    file:
+      path: /var/lib/postgres/data
+      state: directory
+      owner: postgres
+      group: http
+      mode: 0700
+  - name: Enable postgresql.service
+    systemd:
+      enabled: yes
+      name: postgresql
   - name: Install web servers deps
     pacman:
       name:

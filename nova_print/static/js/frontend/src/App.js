@@ -64,6 +64,14 @@ const DocumentViewer = props => {
     label: {
       width: "7rem",
     },
+    viewerWrapper: {
+      display: "flex",
+      height: "60vh",
+    },
+    flex1: {
+      display: "flex",
+      flex: 1,
+    },
   };
   return (
     <div style={styles.wrapper}>
@@ -99,12 +107,20 @@ const DocumentViewer = props => {
           />
         </div>
       </div>
-      <textarea
-        cols="50"
-        rows="10"
-        value={props.document.org}
-        onChange={e => props.updateDocument(e, "org")}
-      />
+      <div style={styles.viewerWrapper}>
+        <textarea
+          style={styles.flex1}
+          cols="50"
+          rows="10"
+          value={props.document.org}
+          onChange={e => props.updateDocument(e, "org")}
+        />
+        <iframe
+          key={props.iframeKey}
+          style={styles.flex1}
+          src="http://127.0.0.1:8000/static/output.pdf"
+        />
+      </div>
       <button onClick={props.save}>Save</button>
       <button onClick={props.compile}>Compile document</button>
       <button onClick={props.createDocument}>New</button>
@@ -129,6 +145,7 @@ class App extends Component {
         toc: false,
         org: "",
       },
+      iframeKey: 0,
     };
 
     this.login = this.login.bind(this);
@@ -272,6 +289,7 @@ class App extends Component {
       credentials: "include",
     };
     const resp = await fetch("/submit", options);
+    this.setState({iframeKey: this.state.iframeKey + 1});
     console.log("Done compiling");
   }
   render() {
@@ -299,6 +317,7 @@ class App extends Component {
               createDocument={this.createDocument}
               save={this.saveDocument}
               compile={this.compileDocument}
+              iframeKey={this.state.iframeKey}
             />,
             <button onClick={this.logout} key={2}>
               Logout

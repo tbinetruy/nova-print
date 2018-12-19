@@ -131,6 +131,7 @@ class App extends Component {
     };
 
     this.login = this.login.bind(this);
+    this.logout = this.logout.bind(this);
     this.onChange = this.onChange.bind(this);
     this.loadDocument = this.loadDocument.bind(this);
     this.createDocument = this.createDocument.bind(this);
@@ -202,6 +203,9 @@ class App extends Component {
       console.log(e);
     }
   }
+  logout() {
+    this.setState({user: {}});
+  }
   async login() {
     const {username, password} = this.state;
     const url = `/authenticate/?client_id=${clientId}&client_secret=${clientSecret}&grant_type=password`;
@@ -264,6 +268,9 @@ class App extends Component {
               createDocument={this.createDocument}
               save={this.saveDocument}
             />,
+            <button onClick={this.logout} key={2}>
+              Logout
+            </button>,
           ]
         )}
       </div>

@@ -9,8 +9,9 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from emacs_api.serializers import UserSerializer
+from emacs_api.serializers import UserSerializer, DocumentSerializer
 from rest_framework.permissions import IsAuthenticated
+from emacs_api.models import Document
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -21,6 +22,23 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
 
+class DocumentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows documents to be viewed or edited.
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+
+
+from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
+class CustomObtainAuthToken(ObtainAuthToken):
+    def post(self, request, *args, **kwargs):
+        response = super(CustomObtainAuthToken, self).post(request, *args, **kwargs)
+        token = Token.objects.get(key=response.data['token'])
+        return Response({'token': token.key, 'id': token.user_id})
 
 
 

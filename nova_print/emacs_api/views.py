@@ -29,6 +29,11 @@ class DocumentViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
+    def list(self, request):
+        queryset = Document.objects.filter(author=request.user.pk)
+        serializer = DocumentSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 
 from rest_framework.authtoken.views import ObtainAuthToken

@@ -163,7 +163,7 @@ class App extends Component {
     const defaultDocument = {
       title: "Title",
       subtitle: "Subtitle",
-      author: window.origin + `/api/users/${this.state.user.id}/`,
+      author: this.state.user.id,
       org: "Org mode goes here",
       toc: false,
       theme_color: "119fd4",
@@ -218,7 +218,7 @@ class App extends Component {
     try {
       const r = await fetch(url, options);
       const json = await r.json();
-      this.setState({documents: json.results});
+      this.setState({documents: json});
     } catch (e) {
       console.log(e);
     }
@@ -295,6 +295,7 @@ class App extends Component {
     };
     const resp = await fetch("/submit", options);
     this.setState({iframeKey: this.state.iframeKey + 1});
+    this.saveDocument();
     console.log("Done compiling");
   }
   render() {

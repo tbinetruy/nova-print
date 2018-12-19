@@ -8,7 +8,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'username', 'email', 'groups')
 
-class DocumentSerializer(serializers.HyperlinkedModelSerializer):
+class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = ('pk', 'author', 'toc', 'title', 'subtitle', 'org', 'theme_color')

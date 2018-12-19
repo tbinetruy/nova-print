@@ -106,6 +106,7 @@ const DocumentViewer = props => {
         onChange={e => props.updateDocument(e, "org")}
       />
       <button onClick={props.save}>Save</button>
+      <button onClick={props.compile}>Compile document</button>
       <button onClick={props.createDocument}>New</button>
     </div>
   );
@@ -138,6 +139,7 @@ class App extends Component {
     this.saveDocument = this.saveDocument.bind(this);
     this.updateDocument = this.updateDocument.bind(this);
     this.fetchDocuments = this.fetchDocuments.bind(this);
+    this.compileDocument = this.compileDocument.bind(this);
   }
   async createDocument() {
     const defaultDocument = {
@@ -243,6 +245,35 @@ class App extends Component {
     };
     this.setState({currentDocument});
   }
+  getOrgData() {
+    const {title, subtitle, theme_color, org} = this.state.currentDocument;
+    const doctype = "memo";
+
+    const header = `
+#+TITLE: ${subtitle} \n
+#+INCLUDE: "./nova-print/doctype-${doctype}.org" \n
+{{{subtitle(${title})}}} \n
+{{{theme-color(${theme_color})}}} \n`;
+
+    return header + org;
+  }
+  async compileDocument() {
+    console.log("Compiling");
+    const org = this.getOrgData();
+    const data = {
+      org,
+    };
+    const options = {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    };
+    const resp = await fetch("/submit", options);
+    console.log("Done compiling");
+  }
   render() {
     return (
       <div className="App">
@@ -267,6 +298,7 @@ class App extends Component {
               updateDocument={this.updateDocument}
               createDocument={this.createDocument}
               save={this.saveDocument}
+              compile={this.compileDocument}
             />,
             <button onClick={this.logout} key={2}>
               Logout

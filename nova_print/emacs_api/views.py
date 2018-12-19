@@ -57,6 +57,9 @@ def create_pdf(filename):
 
     return stdout
 
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
 def submit(request):
     if request.method != 'POST':
         return HttpResponse('ERROR')

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+mkdir /var/lib/postgres/data
+chown postgres /var/lib/postgres/data
+su - postgres
+initdb -D '/var/lib/postgres/data'
+
+DBNAME=nova_print
+DBUSER=foo
+USERPASSWD=bar
+echo "CREATE DATABASE $DBNAME; CREATE USER $DBUSER WITH PASSWORD '$USERPASSWD'; ALTER ROLE $DBUSER SET client_encoding TO 'utf8'; ALTER ROLE $DBUSER SET default_transaction_isolation TO 'read committed'; ALTER ROLE $DBUSER SET timezone TO 'UTC'; GRANT ALL PRIVILEGES ON DATABASE $DBNAME TO $DBUSER;" | psql

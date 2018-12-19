@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['212.47.232.156', '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
+    'emacs_api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

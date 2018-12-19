@@ -3,10 +3,19 @@
   remote_user: root
   tasks:
   - name: Upload nova_print django project sources
-    copy:
+    synchronize:
       src: ~/code/nova-print/nova_print
       dest: ~thomas/nova-print/ 
-      owner: thomas
+      rsync_opts:
+        - "--exclude=nova_print/db.sqlite3"
+  - name: pip install requirements
+    become: yes
+    become_user: thomas
+    raw: pip install -r ~thomas/nova-print/nova_print/requirements.txt
+  - name: python manage.py migrate
+    raw: cd ~thomas/nova-print/nova_print && python manage.py migrate
+    become: yes
+    become_user: thomas
   - name: Collectstatic
     become: yes
     become_user: thomas

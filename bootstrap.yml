@@ -37,6 +37,7 @@
       name:
         - python
         - python-pip
+        - rsync
   - name: Install web servers deps
     pacman:
       name:

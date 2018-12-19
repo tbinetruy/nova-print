@@ -65,7 +65,7 @@ def submit(request):
         return HttpResponse('ERROR')
 
     org = json.loads(request.body)['org']
-    filename = "output.org"
+    filename = json.loads(request.body)['filename'] + ".org"
     with open(f"/tmp/{filename}", "w") as text_file:
         text_file.write(org)
 

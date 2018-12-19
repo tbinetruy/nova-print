@@ -118,7 +118,7 @@ const DocumentViewer = props => {
         <iframe
           key={props.iframeKey}
           style={styles.flex1}
-          src="http://127.0.0.1:8000/static/output.pdf"
+          src={"http://127.0.0.1:8000/static/" + props.iframeUrl + ".pdf"}
         />
       </div>
       <button onClick={props.save}>Save</button>
@@ -157,6 +157,7 @@ class App extends Component {
     this.updateDocument = this.updateDocument.bind(this);
     this.fetchDocuments = this.fetchDocuments.bind(this);
     this.compileDocument = this.compileDocument.bind(this);
+    this.getCurrentDocumentPk = this.getCurrentDocumentPk.bind(this);
   }
   async createDocument() {
     const defaultDocument = {
@@ -274,11 +275,15 @@ class App extends Component {
 
     return header + org;
   }
+  getCurrentDocumentPk() {
+    return this.state.user.id + "-" + this.state.currentDocument.pk;
+  }
   async compileDocument() {
     console.log("Compiling");
     const org = this.getOrgData();
     const data = {
       org,
+      filename: this.getCurrentDocumentPk(),
     };
     const options = {
       method: "POST",
@@ -318,6 +323,7 @@ class App extends Component {
               save={this.saveDocument}
               compile={this.compileDocument}
               iframeKey={this.state.iframeKey}
+              iframeUrl={this.getCurrentDocumentPk()}
             />,
             <button onClick={this.logout} key={2}>
               Logout

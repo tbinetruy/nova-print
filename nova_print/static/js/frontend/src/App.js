@@ -49,8 +49,56 @@ const DocumentList = props => {
 };
 
 const DocumentViewer = props => {
+  const styles = {
+    wrapper: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    headerWrapper: {
+      display: "flex",
+      flexDirection: "column",
+    },
+    paramInput: {
+      display: "flex",
+    },
+    label: {
+      width: "7rem",
+    },
+  };
   return (
-    <div>
+    <div style={styles.wrapper}>
+      <div style={styles.headerWrapper}>
+        <div style={styles.paramInput}>
+          <label style={styles.label} htmlFor="tite">
+            Title:{" "}
+          </label>
+          <input
+            name="title"
+            value={props.document.title}
+            onChange={e => props.updateDocument(e, "title")}
+          />
+        </div>
+        <div style={styles.paramInput}>
+          <label style={styles.label} htmlFor="subtitle">
+            Subtitle:{" "}
+          </label>
+          <input
+            name="subtitle"
+            value={props.document.subtitle}
+            onChange={e => props.updateDocument(e, "subtitle")}
+          />
+        </div>
+        <div style={styles.paramInput}>
+          <label style={styles.label} htmlFor="theme_color">
+            Theme color:{" "}
+          </label>
+          <input
+            name="theme_color"
+            value={props.document.theme_color}
+            onChange={e => props.updateDocument(e, "theme_color")}
+          />
+        </div>
+      </div>
       <textarea
         cols="50"
         rows="10"
@@ -73,7 +121,13 @@ class App extends Component {
       user: {},
       documents: "",
       errorMsg: "",
-      currentDocument: {},
+      currentDocument: {
+        title: "",
+        subtitle: "",
+        theme_color: "",
+        toc: false,
+        org: "",
+      },
     };
 
     this.login = this.login.bind(this);

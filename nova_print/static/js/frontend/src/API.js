@@ -33,7 +33,6 @@ class API {
     try {
       const r = await fetch(url, options);
       json = await r.json();
-      this.setState({documents: json});
 
       return json;
     } catch (e) {

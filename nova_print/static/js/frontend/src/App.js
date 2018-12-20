@@ -27,25 +27,80 @@ const Form = props => {
   );
 };
 
+const Hover = Comp =>
+  class C extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        isHovered: false,
+      };
+      this.onMouseLeave = this.onMouseLeave.bind(this);
+      this.onMouseEnter = this.onMouseEnter.bind(this);
+    }
+    onMouseEnter() {
+      this.setState({isHovered: true});
+    }
+    onMouseLeave() {
+      this.setState({isHovered: false});
+    }
+    render() {
+      return (
+        <div onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter}>
+          <Comp isHovered={this.state.isHovered} />
+        </div>
+      );
+    }
+  };
+
 const DocumentList = props => {
   const styles = {
     wrapper: {
       display: "flex",
       flexDirection: "column",
+      margin: "1rem",
+      justifyContent: "center",
+    },
+    button: {
+      margin: "1rem",
+    },
+    cell: {
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      height: "2rem",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      cursor: "pointer",
     },
   };
 
   const list = props.documents
-    ? props.documents.map((d, i) => (
-        <div style={styles.cell} key={i} onClick={e => props.loadDocument(i)}>
-          {d.title}
-        </div>
-      ))
+    ? props.documents.map((d, i) =>
+        React.createElement(
+          Hover(hoverProps => (
+            <div
+              style={{
+                ...styles.cell,
+                backgroundColor: `rgba(0, 0, 0, ${
+                  hoverProps.isHovered ? 0.1 : 0
+                })`,
+              }}
+              key={i}
+              onClick={e => props.loadDocument(i)}>
+              {d.title}
+              {props.isHovered}
+            </div>
+          )),
+          {key: i},
+        ),
+      )
     : "";
 
   return (
     <div style={styles.wrapper}>
-      <div style={styles.row}>{list}</div>
+      {list}
+      <button style={styles.button} onClick={props.createDocument}>
+        New
+      </button>
     </div>
   );
 };
@@ -126,7 +181,6 @@ const DocumentViewer = props => {
       </div>
       <button onClick={props.save}>Save</button>
       <button onClick={props.compile}>Compile document</button>
-      <button onClick={props.createDocument}>New</button>
     </div>
   );
 };
@@ -304,6 +358,16 @@ class App extends Component {
     console.log("Done compiling");
   }
   render() {
+    const styles = {
+      dashboardWrapper: {
+        display: "flex",
+      },
+      documentWrapper: {
+        dispay: "flex",
+        flexDirection: "column",
+        flex: 1,
+      },
+    };
     return (
       <div className="App">
         {!this.state.user.token ? (
@@ -315,26 +379,26 @@ class App extends Component {
             errorMsg={this.state.errorMsg}
           />
         ) : (
-          [
+          <div style={styles.dashboardWrapper}>
             <DocumentList
-              key={0}
               documents={this.state.documents}
               loadDocument={this.loadDocument}
-            />,
-            <DocumentViewer
-              key={1}
-              document={this.state.currentDocument}
-              updateDocument={this.updateDocument}
               createDocument={this.createDocument}
-              save={this.saveDocument}
-              compile={this.compileDocument}
-              iframeKey={this.state.iframeKey}
-              iframeUrl={this.getCurrentDocumentPk()}
-            />,
-            <button onClick={this.logout} key={2}>
-              Logout
-            </button>,
-          ]
+            />
+            <div style={styles.documentWrapper}>
+              <DocumentViewer
+                document={this.state.currentDocument}
+                updateDocument={this.updateDocument}
+                save={this.saveDocument}
+                compile={this.compileDocument}
+                iframeKey={this.state.iframeKey}
+                iframeUrl={this.getCurrentDocumentPk()}
+              />
+              <button onClick={this.logout} key={2}>
+                Logout
+              </button>
+            </div>
+          </div>
         )}
       </div>
     );

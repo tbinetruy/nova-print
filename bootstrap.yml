@@ -39,6 +39,7 @@
         - python-pip
         - rsync
         - postgresql
+        - texlive-most
   - name: Give postgresql ownership of /var/lib/postgres/data
     file:
       path: /var/lib/postgres/data

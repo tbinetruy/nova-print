@@ -7,6 +7,7 @@ from emacs_api import views
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
 router.register(r'documents', views.DocumentViewSet)
+router.register(r'nested-documents', views.NestedDocumentViewSet)
 
 urlpatterns = [
     path('', include('emacs_api.urls')),

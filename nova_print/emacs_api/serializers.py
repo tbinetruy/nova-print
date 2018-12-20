@@ -14,6 +14,11 @@ class FigureSerializer(serializers.ModelSerializer):
         fields = ('pk', 'title', 'image')
 
 class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ('pk', 'images', 'author', 'toc', 'title', 'subtitle', 'org', 'theme_color')
+
+class NestedDocumentSerializer(serializers.ModelSerializer):
     images = FigureSerializer(many=True)
     class Meta:
         model = Document

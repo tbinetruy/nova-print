@@ -9,7 +9,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from emacs_api.serializers import UserSerializer, DocumentSerializer
+from emacs_api.serializers import UserSerializer, DocumentSerializer, NestedDocumentSerializer
 from rest_framework.permissions import IsAuthenticated
 from emacs_api.models import Document
 
@@ -34,6 +34,17 @@ class DocumentViewSet(viewsets.ModelViewSet):
         serializer = DocumentSerializer(queryset, many=True)
         return Response(serializer.data)
 
+class NestedDocumentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows documents to be viewed or edited.
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Document.objects.all()
+    serializer_class = NestedDocumentSerializer
+    def list(self, request):
+        queryset = Document.objects.filter(author=request.user.pk)
+        serializer = NestedDocumentSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 from rest_framework.authtoken.views import ObtainAuthToken
@@ -48,7 +59,7 @@ class CustomObtainAuthToken(ObtainAuthToken):
 
 
 def create_pdf(filename):
-    cmd = f"cd /tmp && emacs {filename} --batch --eval '(progn (load-file \"~/.emacs.d/nova-print/main.el\")(nova-print//export))' --kill"
+    cmd = f"cd /tmp && emacs {filename} --batch --eval '(progn (load-file \"~/.emacs.d/nova-print/main.el\")(nova-print//export))'  --kill"
     sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     stdout = sp.communicate()[0]
 
@@ -71,7 +82,11 @@ def submit(request):
 
 
     body = json.loads(request.body)
-    media_root = "/home/thomas/code/nova-print/nova_print/media_root/"
+
+    media_root = os.environ.get(
+        'nova_print_pdf_media_root_dir',
+        "/home/thomas/nova-print/nova_print/media_root/",
+        )
     dest_path = "/tmp/"
     for fig in body['figures']:
         img_name = fig['image']
@@ -80,7 +95,12 @@ def submit(request):
 
 
 
-        cmd = f"yes | cp -f {path} {target_path}"
+        foo = f"echo {path} > /tmp/emacslog"
+        subprocess.Popen(foo, shell=True)
+        foo = f"echo {target_path} > /tmp/emacslog"
+        subprocess.Popen(foo, shell=True)
+
+        cmd = f"yes | cp -f {path} {target_path} &> /tmp/emacslog"
         sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         stdout = sp.communicate()[0]
         print(stdout)

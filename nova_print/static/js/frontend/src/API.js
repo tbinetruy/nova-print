@@ -22,7 +22,7 @@ class API {
   }
 
   async fetchDocuments(token) {
-    const url = `/api/documents`;
+    const url = `/api/nested-documents`;
     const options = {
       headers: {
         Authorization: `Token ${token}`,

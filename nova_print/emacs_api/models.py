@@ -14,7 +14,7 @@ class Figure(models.Model):
 
 class Document(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    images = models.ManyToManyField(Figure, null=True)
+    images = models.ManyToManyField(Figure, blank=True)
     title = models.CharField(max_length=50)
     subtitle = models.CharField(max_length=50)
     theme_color = models.CharField(max_length=6)

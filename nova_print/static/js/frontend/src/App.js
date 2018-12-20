@@ -9,18 +9,20 @@ const Form = props => {
   return (
     <div className="wrapper">
       <p>{props.errorMsg}</p>
-      <input
-        name="username"
-        value={props.username}
-        onChange={e => props.onChange(e, "username")}
-      />
-      <input
-        name="password"
-        type="password"
-        value={props.password}
-        onChange={e => props.onChange(e, "password")}
-      />
-      <button onClick={props.onSubmit}>Login</button>
+      <form onSubmit={props.onSubmit}>
+        <input
+          name="username"
+          value={props.username}
+          onChange={e => props.onChange(e, "username")}
+        />
+        <input
+          name="password"
+          type="password"
+          value={props.password}
+          onChange={e => props.onChange(e, "password")}
+        />
+        <button onClick={props.onSubmit}>Login</button>
+      </form>
     </div>
   );
 };
@@ -227,7 +229,9 @@ class App extends Component {
   logout() {
     this.setState({user: {}});
   }
-  async login() {
+  async login(e) {
+    e.preventDefault();
+
     const {username, password} = this.state;
     const url = `/authenticate/?client_id=${clientId}&client_secret=${clientSecret}&grant_type=password`;
     const body = JSON.stringify({

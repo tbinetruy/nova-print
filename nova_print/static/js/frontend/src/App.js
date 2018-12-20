@@ -19,7 +19,7 @@ class App extends Component {
       currentDocument: {
         title: "",
         subtitle: "",
-        theme_color: "",
+        theme_color: "000000",
         toc: false,
         org: "",
       },
@@ -169,6 +169,7 @@ class App extends Component {
                 currentDocument={this.state.currentDocument}
                 saveDocument={this.saveDocument}
                 compileDocument={this.compileDocument}
+                color={this.state.currentDocument.theme_color}
               />
               <div style={styles.documentWrapper}>
                 <DocumentViewer

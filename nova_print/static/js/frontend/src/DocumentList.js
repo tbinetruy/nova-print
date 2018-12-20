@@ -2,59 +2,76 @@ import React, {Component} from "react";
 import {Hover} from "./HOC.js";
 import {colorList} from "./constants.js";
 
-const ListItem = Hover(props => {
-  const cell = {
-    overflow: "hidden",
-    whiteSpace: "nowrap",
-    textOverflow: "ellipsis",
-    height: "2rem",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
+function hexToRgb(hex) {
+  console.log(hex);
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
+}
+
+function getThemeColor(hex, opacity, inverse = false) {
+  const {r, g, b} = hexToRgb(hex);
+  let rgb = `rgba(${r},${g},${b},${opacity})`;
+  if (inverse) {
+    rgb = `rgba(${255 - r},${255 - g},${255 - b},${opacity})`;
+  }
+  return rgb;
+}
+
+const cellStyle = {
+  overflow: "hidden",
+  whiteSpace: "nowrap",
+  textOverflow: "ellipsis",
+  height: "2rem",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+};
+
+const Button = Hover(props => {
+  const buttonStyle = {
+    ...cellStyle,
+    backgroundColor: getThemeColor(
+      props.color,
+      props.isHovered ? 0.7 : 0,
+      true,
+    ),
     width: "100%",
+    cursor: "pointer",
   };
+  return (
+    <div style={buttonStyle} onClick={props.onClick}>
+      {props.title}
+    </div>
+  );
+});
+
+const ListItem = Hover(props => {
   const styles = {
     cellWrapper: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: (props.active ? 6 : 2) + "rem",
+      height: (props.active ? 3 : 2) + "rem",
       cursor: "pointer",
-      backgroundColor: `rgba(0, 0, 0, ${
-        props.isHovered ? 0.2 : props.active ? 0.1 : 0
-      })`,
+      backgroundColor: getThemeColor(props.color, props.isHovered ? 0.2 : 0.1),
       flexDirection: "column",
     },
-    cell,
-    active: {
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
-    },
-    button: {
-      ...cell,
-      display: props.active ? cell.display : "none",
-    },
+    cell: cellStyle,
   };
-
-  const Button = Hover(props => {
-    const buttonStyle = {
-      ...styles.button,
-      backgroundColor: `rgba(255, 255, 255, ${props.isHovered ? 0.2 : 0})`,
-      width: "100%",
-    };
-    return (
-      <div style={buttonStyle} onClick={props.onClick}>
-        {props.title}
-      </div>
-    );
-  });
+  console.log(props.color, getThemeColor(props.color, 0.1));
 
   return (
     <div style={styles.cellWrapper}>
       <div onClick={props.loadDocument} style={styles.cell}>
         {props.document ? props.document.title : 0}
       </div>
-      <Button title="Save" onClick={props.save} />
-      <Button title="Compile" onClick={props.compile} />
     </div>
   );
 });
@@ -66,7 +83,6 @@ const DocumentList = props => {
       flexDirection: "column",
       margin: "1rem",
       justifyContent: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
       maxWidth: "10rem",
       minWidth: "10rem",
     },
@@ -77,13 +93,15 @@ const DocumentList = props => {
       display: "flex",
       flexDirection: "column",
       flex: 1,
-      justifyContent: "center",
     },
     header: {
       padding: "1rem 0",
-      background: "rgba(0, 0, 0, 0.2)",
+      backgroundColor: getThemeColor(props.color, 0.2),
       color: "rgba(74, 74, 74, 0.9)",
       fontWeight: "bold",
+    },
+    button: {
+      ...cellStyle,
     },
   };
 
@@ -98,20 +116,25 @@ const DocumentList = props => {
             document={d}
             key={i}
             loadDocument={() => props.loadDocument(i)}
-            save={props.saveDocument}
-            compile={props.compileDocument}
+            color={props.color}
           />
         ))
     : "";
 
   return (
     <div style={styles.wrapper}>
+      <div style={styles.header}>Current Doc</div>
+      <Button color={props.color} title="Save" onClick={props.saveDocument} />
+      <Button
+        color={props.color}
+        title="Compile"
+        onClick={props.compileDocument}
+      />
+
       <div style={styles.header}>My Docs</div>
       <div style={styles.listWrapper}>
         {list}
-        <button style={styles.button} onClick={props.createDocument}>
-          +
-        </button>
+        <Button color={props.color} title="+" onClick={props.createDocument} />
       </div>
     </div>
   );

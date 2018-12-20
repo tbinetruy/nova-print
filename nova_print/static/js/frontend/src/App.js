@@ -42,7 +42,7 @@ const LoginForm = props => {
           value={props.password}
           onChange={e => props.onChange(e, "password")}
         />
-        <button onClick={props.onSubmit}>Login</button>
+        <button type="submit">Login</button>
       </form>
     </div>
   );

@@ -81,6 +81,6 @@ def submit(request):
 
 @ensure_csrf_cookie
 def index(request):
-    template = loader.get_template('emacs_api/index.html')
+    template = loader.get_template('static/js/frontend/build/index.html')
 
     return HttpResponse(template.render({}, request))

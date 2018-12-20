@@ -306,26 +306,8 @@ class App extends Component {
     this.getCurrentDocumentPk = this.getCurrentDocumentPk.bind(this);
   }
   async createDocument() {
-    const defaultDocument = {
-      title: "Title",
-      subtitle: "Subtitle",
-      author: this.state.user.id,
-      org: "Org mode goes here",
-      toc: false,
-      theme_color: "119fd4",
-    };
-    const url = `/api/documents/`;
-    const options = {
-      method: "POST",
-      headers: {
-        authorization: `Token ${this.state.user.token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(defaultDocument),
-    };
-
     try {
-      await fetch(url, options);
+      await new API().createDocument(this.state.user);
     } catch (e) {
       console.log(e);
     }
@@ -333,20 +315,11 @@ class App extends Component {
     this.fetchDocuments();
   }
   async saveDocument() {
-    const url = `/api/documents/${this.state.currentDocument.pk}/`;
-    const options = {
-      method: "PUT",
-      headers: {
-        authorization: `Token ${this.state.user.token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(this.state.currentDocument),
-    };
-
     try {
-      const r = await fetch(url, options);
-      const json = await r.json();
-      console.log(json);
+      await new API().saveDocument(
+        this.state.user.token,
+        this.state.currentDocument,
+      );
     } catch (e) {
       console.log(e);
     }
@@ -354,16 +327,8 @@ class App extends Component {
     this.fetchDocuments();
   }
   async fetchDocuments() {
-    const url = `/api/documents`;
-    const options = {
-      headers: {
-        Authorization: `Token ${this.state.user.token}`,
-      },
-    };
-
     try {
-      const r = await fetch(url, options);
-      const json = await r.json();
+      const json = await new API().fetchDocuments(this.state.user.token);
       this.setState({documents: json});
     } catch (e) {
       console.log(e);
@@ -384,7 +349,7 @@ class App extends Component {
         this.setState({user, errorMsg: ""});
         await this.fetchDocuments();
         if (this.state.documents.length) {
-          this.setState({currentDocument: this.state.documents[0]});
+          this.loadDocument(0);
         }
       } else this.setState({errorMsg: "Invalid creds"});
     } catch (e) {
@@ -421,22 +386,16 @@ class App extends Component {
   }
   async compileDocument() {
     console.log("Compiling");
-    const org = this.getOrgData();
-    const data = {
-      org,
-      filename: this.getCurrentDocumentPk(),
-    };
-    const options = {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    };
-    await fetch("/submit", options);
-    this.setState({iframeKey: this.state.iframeKey + 1});
-    this.saveDocument();
+    try {
+      await new API().compileDocument(
+        this.getOrgData(),
+        this.getCurrentDocumentPk(),
+      );
+      this.setState({iframeKey: this.state.iframeKey + 1});
+      this.saveDocument();
+    } catch (e) {
+      console.log(e);
+    }
     console.log("Done compiling");
   }
   render() {

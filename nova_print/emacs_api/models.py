@@ -6,7 +6,7 @@ import uuid
 def user_directory_path(instance, filename):
     ext = filename.split('.')[-1]
     filename = "%s.%s" % (uuid.uuid4(), ext)
-    return os.path.join('uploads/figures', filename)
+    return os.path.join('figures', filename)
 
 class Figure(models.Model):
     title = models.CharField(max_length=50,  blank=True)

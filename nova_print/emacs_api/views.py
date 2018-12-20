@@ -69,6 +69,23 @@ def submit(request):
     if request.method != 'POST':
         return HttpResponse('ERROR')
 
+
+    body = json.loads(request.body)
+    media_root = "/home/thomas/code/nova-print/nova_print/media_root/"
+    dest_path = "/tmp/"
+    for fig in body['figures']:
+        img_name = fig['image']
+        path = media_root + img_name
+        target_path = dest_path + img_name
+
+
+
+        cmd = f"yes | cp -f {path} {target_path}"
+        sp = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+        stdout = sp.communicate()[0]
+        print(stdout)
+
+
     org = json.loads(request.body)['org']
     filename = json.loads(request.body)['filename'] + ".org"
     with open(f"/tmp/{filename}", "w") as text_file:

@@ -91,10 +91,11 @@ class API {
     }
   }
 
-  async compileDocument(org, filename) {
+  async compileDocument(org, filename, figures) {
     const data = {
       org,
       filename,
+      figures,
     };
     const options = {
       method: "POST",

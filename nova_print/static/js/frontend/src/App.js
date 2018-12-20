@@ -122,6 +122,7 @@ class App extends Component {
       await new API().compileDocument(
         this.getOrgData(),
         this.getCurrentDocumentPk(),
+        this.state.currentDocument.images,
       );
       this.setState({iframeKey: this.state.iframeKey + 1});
       this.saveDocument();

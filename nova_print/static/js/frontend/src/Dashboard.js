@@ -88,16 +88,20 @@ const DocumentList = props => {
   };
 
   const list = props.documents
-    ? props.documents.map((d, i) => (
-        <ListItem
-          active={d.pk == props.currentDocument.pk}
-          document={d}
-          key={i}
-          loadDocument={() => props.loadDocument(i)}
-          save={props.saveDocument}
-          compile={props.compileDocument}
-        />
-      ))
+    ? props.documents
+        .sort(
+          (a, b) => a.title.toLocaleLowerCase() > b.title.toLocaleLowerCase(),
+        )
+        .map((d, i) => (
+          <ListItem
+            active={d.pk == props.currentDocument.pk}
+            document={d}
+            key={i}
+            loadDocument={() => props.loadDocument(i)}
+            save={props.saveDocument}
+            compile={props.compileDocument}
+          />
+        ))
     : "";
 
   return (

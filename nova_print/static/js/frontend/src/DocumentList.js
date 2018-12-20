@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {Hover} from "./HOC.js";
 import {colorList} from "./constants.js";
-
+import {Hover} from "./HOC.js";
 import {getThemeColor} from "./helpers.js";
+import {Button} from "./UI.js";
 
 const cellStyle = {
   overflow: "hidden",
@@ -14,24 +14,6 @@ const cellStyle = {
   alignItems: "center",
   width: "100%",
 };
-
-const Button = Hover(props => {
-  const buttonStyle = {
-    ...cellStyle,
-    backgroundColor: getThemeColor(
-      props.color,
-      props.isHovered ? 0.7 : 0,
-      true,
-    ),
-    width: "100%",
-    cursor: "pointer",
-  };
-  return (
-    <div style={buttonStyle} onClick={props.onClick}>
-      {props.title}
-    </div>
-  );
-});
 
 const ListItem = Hover(props => {
   const styles = {
@@ -105,8 +87,14 @@ const DocumentList = props => {
   return (
     <div style={styles.wrapper}>
       <div style={styles.header}>Current Doc</div>
-      <Button color={props.color} title="Save" onClick={props.saveDocument} />
       <Button
+        style={cellStyle}
+        color={props.color}
+        title="Save"
+        onClick={props.saveDocument}
+      />
+      <Button
+        style={cellStyle}
         color={props.color}
         title="Compile"
         onClick={props.compileDocument}
@@ -115,7 +103,12 @@ const DocumentList = props => {
       <div style={styles.header}>My Docs</div>
       <div style={styles.listWrapper}>
         {list}
-        <Button color={props.color} title="+" onClick={props.createDocument} />
+        <Button
+          style={cellStyle}
+          color={props.color}
+          title="+"
+          onClick={props.createDocument}
+        />
       </div>
     </div>
   );

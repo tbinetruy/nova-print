@@ -165,13 +165,13 @@ class App extends Component {
                 loadDocument={this.loadDocument}
                 createDocument={this.createDocument}
                 currentDocument={this.state.currentDocument}
+                saveDocument={this.saveDocument}
+                compileDocument={this.compileDocument}
               />
               <div style={styles.documentWrapper}>
                 <DocumentViewer
                   document={this.state.currentDocument}
                   updateDocument={this.updateDocument}
-                  save={this.saveDocument}
-                  compile={this.compileDocument}
                   iframeKey={this.state.iframeKey}
                   iframeUrl={this.getCurrentDocumentPk()}
                 />

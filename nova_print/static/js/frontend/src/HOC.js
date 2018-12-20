@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 
-const Hover = Comp =>
+const Hover = Comp => {
   class C extends Component {
     constructor(props) {
       super(props);
@@ -17,12 +17,23 @@ const Hover = Comp =>
       this.setState({isHovered: false});
     }
     render() {
+      const styles = {
+        wrapper: {
+          width: this.props.width,
+        },
+      };
       return (
-        <div onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter}>
+        <div
+          style={styles.wrapper}
+          onMouseLeave={this.onMouseLeave}
+          onMouseEnter={this.onMouseEnter}>
           <Comp {...this.props} isHovered={this.state.isHovered} />
         </div>
       );
     }
-  };
+  }
+  C.defaultProps = {width: "100%"};
+  return C;
+};
 
 export {Hover};

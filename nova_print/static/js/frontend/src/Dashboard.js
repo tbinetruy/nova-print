@@ -3,34 +3,58 @@ import {Hover} from "./HOC.js";
 import {colorList} from "./constants.js";
 
 const ListItem = Hover(props => {
+  const cell = {
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+    height: "2rem",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  };
   const styles = {
     cellWrapper: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: "2rem",
+      height: (props.active ? 6 : 2) + "rem",
       cursor: "pointer",
       backgroundColor: `rgba(0, 0, 0, ${
         props.isHovered ? 0.2 : props.active ? 0.1 : 0
       })`,
+      flexDirection: "column",
     },
-    cell: {
-      display: "block",
-      overflow: "hidden",
-      whiteSpace: "nowrap",
-      textOverflow: "ellipsis",
-      padding: "0 0.5rem",
-    },
+    cell,
     active: {
       backgroundColor: "rgba(0, 0, 0, 0.1)",
     },
+    button: {
+      ...cell,
+      display: props.active ? cell.display : "none",
+    },
   };
-  return (
-    <div onClick={props.loadDocument} style={styles.cellWrapper}>
-      <div style={styles.cell}>
-        {props.document.title}
-        {props.isHovered}
+
+  const Button = Hover(props => {
+    const buttonStyle = {
+      ...styles.button,
+      backgroundColor: `rgba(255, 255, 255, ${props.isHovered ? 0.2 : 0})`,
+      width: "100%",
+    };
+    return (
+      <div style={buttonStyle} onClick={props.onClick}>
+        {props.title}
       </div>
+    );
+  });
+
+  return (
+    <div style={styles.cellWrapper}>
+      <div onClick={props.loadDocument} style={styles.cell}>
+        {props.document.title}
+      </div>
+      <Button title="Save" onClick={props.save} />
+      <Button title="Compile" onClick={props.compile} />
     </div>
   );
 });
@@ -70,6 +94,8 @@ const DocumentList = props => {
           document={d}
           key={i}
           loadDocument={() => props.loadDocument(i)}
+          save={props.saveDocument}
+          compile={props.compileDocument}
         />
       ))
     : "";
@@ -115,13 +141,6 @@ const DocumentViewer = props => {
     flex1: {
       display: "flex",
       flex: 1,
-    },
-    buttonWrapper: {
-      display: "flex",
-    },
-    button: {
-      flex: 1,
-      margin: "0.5rem 4rem",
     },
   };
   return (
@@ -174,14 +193,6 @@ const DocumentViewer = props => {
           style={styles.flex1}
           src={"http://127.0.0.1:8000/static/" + props.iframeUrl + ".pdf"}
         />
-      </div>
-      <div style={styles.buttonWrapper}>
-        <button style={styles.button} onClick={props.save}>
-          Save
-        </button>
-        <button style={styles.button} onClick={props.compile}>
-          Compile document
-        </button>
       </div>
     </div>
   );

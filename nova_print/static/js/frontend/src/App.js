@@ -386,6 +386,20 @@ class App extends Component {
         flexDirection: "column",
         flex: 1,
       },
+      pageWrapper: {
+        display: "flex",
+        flexDirection: "column",
+      },
+      header: {
+        display: "flex",
+        flex: 1,
+        height: "3rem",
+        padding: "1rem",
+        backgroundColor: "rgba(0, 0, 0, 0.1)",
+      },
+      username: {
+        margin: "0 1rem",
+      },
     };
     return (
       <div className="App">
@@ -398,24 +412,31 @@ class App extends Component {
             errorMsg={this.state.errorMsg}
           />
         ) : (
-          <div style={styles.dashboardWrapper}>
-            <DocumentList
-              documents={this.state.documents}
-              loadDocument={this.loadDocument}
-              createDocument={this.createDocument}
-            />
-            <div style={styles.documentWrapper}>
-              <DocumentViewer
-                document={this.state.currentDocument}
-                updateDocument={this.updateDocument}
-                save={this.saveDocument}
-                compile={this.compileDocument}
-                iframeKey={this.state.iframeKey}
-                iframeUrl={this.getCurrentDocumentPk()}
+          <div style={styles.pageWrapper}>
+            <div style={styles.header}>
+              <div style={styles.logout}>
+                <span style={styles.username}>Hello {this.state.username}</span>
+                <button onClick={this.logout} key={2}>
+                  Logout
+                </button>
+              </div>
+            </div>
+            <div style={styles.dashboardWrapper}>
+              <DocumentList
+                documents={this.state.documents}
+                loadDocument={this.loadDocument}
+                createDocument={this.createDocument}
               />
-              <button onClick={this.logout} key={2}>
-                Logout
-              </button>
+              <div style={styles.documentWrapper}>
+                <DocumentViewer
+                  document={this.state.currentDocument}
+                  updateDocument={this.updateDocument}
+                  save={this.saveDocument}
+                  compile={this.compileDocument}
+                  iframeKey={this.state.iframeKey}
+                  iframeUrl={this.getCurrentDocumentPk()}
+                />
+              </div>
             </div>
           </div>
         )}

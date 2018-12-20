@@ -82,6 +82,18 @@ const DocumentList = props => {
       textOverflow: "ellipsis",
       padding: "0 0.5rem",
     },
+    listWrapper: {
+      display: "flex",
+      flexDirection: "column",
+      flex: 1,
+      justifyContent: "center",
+    },
+    header: {
+      padding: "1rem 0",
+      background: "rgba(0, 0, 0, 0.2)",
+      color: "rgba(74, 74, 74, 0.9)",
+      fontWeight: "bold",
+    },
   };
 
   const list = props.documents
@@ -109,10 +121,13 @@ const DocumentList = props => {
 
   return (
     <div style={styles.wrapper}>
-      {list}
-      <button style={styles.button} onClick={props.createDocument}>
-        New
-      </button>
+      <div style={styles.header}>My Docs</div>
+      <div style={styles.listWrapper}>
+        {list}
+        <button style={styles.button} onClick={props.createDocument}>
+          +
+        </button>
+      </div>
     </div>
   );
 };
@@ -145,6 +160,13 @@ const DocumentViewer = props => {
     flex1: {
       display: "flex",
       flex: 1,
+    },
+    buttonWrapper: {
+      display: "flex",
+    },
+    button: {
+      flex: 1,
+      margin: "0.5rem 4rem",
     },
   };
   return (
@@ -198,8 +220,14 @@ const DocumentViewer = props => {
           src={"http://127.0.0.1:8000/static/" + props.iframeUrl + ".pdf"}
         />
       </div>
-      <button onClick={props.save}>Save</button>
-      <button onClick={props.compile}>Compile document</button>
+      <div style={styles.buttonWrapper}>
+        <button style={styles.button} onClick={props.save}>
+          Save
+        </button>
+        <button style={styles.button} onClick={props.compile}>
+          Compile document
+        </button>
+      </div>
     </div>
   );
 };

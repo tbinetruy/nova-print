@@ -79,7 +79,13 @@ const DocumentViewer = props => {
           title="preview"
           key={props.iframeKey}
           style={styles.flex1}
-          src={"http://127.0.0.1:8000/static/" + props.iframeUrl + ".pdf"}
+          src={
+            `${
+              window.origin.includes("127.0.0.1") ? "http://127.0.0.1:8000" : ""
+            }/static/` +
+            props.iframeUrl +
+            ".pdf"
+          }
         />
       </div>
     </div>

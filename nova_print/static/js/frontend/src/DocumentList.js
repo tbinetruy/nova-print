@@ -23,7 +23,10 @@ const ListItem = Hover(props => {
       alignItems: "center",
       height: (props.active ? 3 : 2) + "rem",
       cursor: "pointer",
-      backgroundColor: getThemeColor(props.color, props.isHovered ? 0.2 : 0.1),
+      backgroundColor: getThemeColor(
+        props.color,
+        props.isHovered ? 0.3 : props.active ? 0.2 : 0.1,
+      ),
       flexDirection: "column",
     },
     cell: cellStyle,

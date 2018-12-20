@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 const clientId = "F9pKxCwq8n9mr41YwLjFjAoaXOL7FOs7rEvzirTA";
@@ -17,6 +16,7 @@ const Form = props => {
       />
       <input
         name="password"
+        type="password"
         value={props.password}
         onChange={e => props.onChange(e, "password")}
       />
@@ -116,6 +116,7 @@ const DocumentViewer = props => {
           onChange={e => props.updateDocument(e, "org")}
         />
         <iframe
+          title="preview"
           key={props.iframeKey}
           style={styles.flex1}
           src={"http://127.0.0.1:8000/static/" + props.iframeUrl + ".pdf"}
@@ -179,7 +180,7 @@ class App extends Component {
     };
 
     try {
-      const r = await fetch(url, options);
+      await fetch(url, options);
     } catch (e) {
       console.log(e);
     }
@@ -293,7 +294,7 @@ class App extends Component {
       },
       credentials: "include",
     };
-    const resp = await fetch("/submit", options);
+    await fetch("/submit", options);
     this.setState({iframeKey: this.state.iframeKey + 1});
     this.saveDocument();
     console.log("Done compiling");

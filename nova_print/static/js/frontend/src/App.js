@@ -1,22 +1,42 @@
 import React, {Component} from "react";
 import "./App.css";
 import {colorList} from "./constants.js";
+import novaPrintScreenshot from "./img/nova-print-screenshot.png";
 
 const clientId = "F9pKxCwq8n9mr41YwLjFjAoaXOL7FOs7rEvzirTA";
 const clientSecret =
   "8sfNsRo5wfSYmD0hzqPesPWCcTnoU7SyYsbgpdvypj2riZSTFzPs01mnlOb6m9MVbVhIgp7jfmMNAAqC5EeyWk08QiDJDxyQqttwEFkav13ZygCU71HsCbDb7GhYaoJ4";
 
-const Form = props => {
+const Intro = props => {
+  const styles = {
+    wrapper: {
+      marginTop: "5rem",
+    },
+    screenshot: {
+      maxHeight: "50vh",
+    },
+  };
+  return (
+    <div style={styles.wrapper}>
+      <p>Welcome to Nova Print !! Here's what it looks like</p>
+      <img src={novaPrintScreenshot} style={styles.screenshot} />
+    </div>
+  );
+};
+
+const LoginForm = props => {
   return (
     <div className="wrapper">
       <p>{props.errorMsg}</p>
       <form onSubmit={props.onSubmit}>
         <input
+          placeholder="Username"
           name="username"
           value={props.username}
           onChange={e => props.onChange(e, "username")}
         />
         <input
+          placeholder="Password"
           name="password"
           type="password"
           value={props.password}
@@ -350,7 +370,10 @@ class App extends Component {
 
       if (user.token) {
         this.setState({user, errorMsg: ""});
-        this.fetchDocuments();
+        await this.fetchDocuments();
+        if (this.state.documents.length) {
+          this.setState({currentDocument: this.state.documents[0]});
+        }
       } else this.setState({errorMsg: "Invalid creds"});
     } catch (e) {
       console.log(e);
@@ -432,13 +455,16 @@ class App extends Component {
     return (
       <div className="App">
         {!this.state.user.token ? (
-          <Form
-            password={this.state.password}
-            username={this.state.username}
-            onChange={this.onChange}
-            onSubmit={this.login}
-            errorMsg={this.state.errorMsg}
-          />
+          <div>
+            <LoginForm
+              password={this.state.password}
+              username={this.state.username}
+              onChange={this.onChange}
+              onSubmit={this.login}
+              errorMsg={this.state.errorMsg}
+            />
+            <Intro />
+          </div>
         ) : (
           <div style={styles.pageWrapper}>
             <div style={styles.header}>

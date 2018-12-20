@@ -59,17 +59,27 @@ const DocumentList = props => {
       flexDirection: "column",
       margin: "1rem",
       justifyContent: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+      maxWidth: "10rem",
+      minWidth: "10rem",
     },
     button: {
       margin: "1rem",
     },
-    cell: {
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
-      height: "2rem",
+    cellWrapper: {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
+      height: "2rem",
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
       cursor: "pointer",
+    },
+    cell: {
+      display: "block",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+      padding: "0 0.5rem",
     },
   };
 
@@ -79,15 +89,18 @@ const DocumentList = props => {
           Hover(hoverProps => (
             <div
               style={{
-                ...styles.cell,
+                ...styles.cellWrapper,
                 backgroundColor: `rgba(0, 0, 0, ${
                   hoverProps.isHovered ? 0.1 : 0
                 })`,
-              }}
-              key={i}
-              onClick={e => props.loadDocument(i)}>
-              {d.title}
-              {props.isHovered}
+              }}>
+              <div
+                style={styles.cell}
+                key={i}
+                onClick={e => props.loadDocument(i)}>
+                {d.title}
+                {props.isHovered}
+              </div>
             </div>
           )),
           {key: i},
@@ -110,16 +123,21 @@ const DocumentViewer = props => {
     wrapper: {
       display: "flex",
       flexDirection: "column",
+      margin: "1rem",
+      marginLeft: "0rem",
     },
     headerWrapper: {
       display: "flex",
-      flexDirection: "column",
+      margin: "1rem",
+      justifyContent: "space-between",
     },
     paramInput: {
       display: "flex",
     },
     label: {
-      width: "7rem",
+      margin: "0 1rem",
+      display: "flex",
+      alignItems: "center",
     },
     viewerWrapper: {
       display: "flex",

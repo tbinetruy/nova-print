@@ -21,7 +21,7 @@ const ListItem = Hover(props => {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      height: (props.active ? 3 : 2) + "rem",
+      height: props.active ? "auto" : 2 + "rem",
       cursor: "pointer",
       backgroundColor: getThemeColor(
         props.color,
@@ -30,6 +30,13 @@ const ListItem = Hover(props => {
       flexDirection: "column",
     },
     cell: cellStyle,
+    imagesWrapper: {
+      display: props.active ? "flex" : "none",
+      flexDirection: "column",
+    },
+    image: {
+      ...cellStyle,
+    },
   };
   console.log(props.color, getThemeColor(props.color, 0.1));
 
@@ -37,6 +44,13 @@ const ListItem = Hover(props => {
     <div style={styles.cellWrapper}>
       <div onClick={props.loadDocument} style={styles.cell}>
         {props.document ? props.document.title : 0}
+      </div>
+      <div style={styles.imagesWrapper}>
+        {props.document.images.map((img, i) => (
+          <span key={i} style={styles.image}>
+            {img.image.replace("figures/", "").substring(0, 10) + "..."}
+          </span>
+        ))}
       </div>
     </div>
   );

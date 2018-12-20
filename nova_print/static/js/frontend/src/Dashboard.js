@@ -2,6 +2,39 @@ import React, {Component} from "react";
 import {Hover} from "./HOC.js";
 import {colorList} from "./constants.js";
 
+const ListItem = Hover(props => {
+  const styles = {
+    cellWrapper: {
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "2rem",
+      cursor: "pointer",
+      backgroundColor: `rgba(0, 0, 0, ${
+        props.isHovered ? 0.2 : props.active ? 0.1 : 0
+      })`,
+    },
+    cell: {
+      display: "block",
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+      padding: "0 0.5rem",
+    },
+    active: {
+      backgroundColor: "rgba(0, 0, 0, 0.1)",
+    },
+  };
+  return (
+    <div onClick={props.loadDocument} style={styles.cellWrapper}>
+      <div style={styles.cell}>
+        {props.document.title}
+        {props.isHovered}
+      </div>
+    </div>
+  );
+});
+
 const DocumentList = props => {
   const styles = {
     wrapper: {
@@ -15,21 +48,6 @@ const DocumentList = props => {
     },
     button: {
       margin: "1rem",
-    },
-    cellWrapper: {
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "2rem",
-      backgroundColor: "rgba(0, 0, 0, 0.1)",
-      cursor: "pointer",
-    },
-    cell: {
-      display: "block",
-      overflow: "hidden",
-      whiteSpace: "nowrap",
-      textOverflow: "ellipsis",
-      padding: "0 0.5rem",
     },
     listWrapper: {
       display: "flex",
@@ -46,26 +64,14 @@ const DocumentList = props => {
   };
 
   const list = props.documents
-    ? props.documents.map((d, i) =>
-        React.createElement(
-          Hover(hoverProps => (
-            <div
-              onClick={e => props.loadDocument(i)}
-              style={{
-                ...styles.cellWrapper,
-                backgroundColor: `rgba(0, 0, 0, ${
-                  hoverProps.isHovered ? 0.1 : 0
-                })`,
-              }}>
-              <div style={styles.cell}>
-                {d.title}
-                {props.isHovered}
-              </div>
-            </div>
-          )),
-          {key: i},
-        ),
-      )
+    ? props.documents.map((d, i) => (
+        <ListItem
+          active={d.pk == props.currentDocument.pk}
+          document={d}
+          key={i}
+          loadDocument={() => props.loadDocument(i)}
+        />
+      ))
     : "";
 
   return (

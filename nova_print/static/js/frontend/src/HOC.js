@@ -19,7 +19,7 @@ const Hover = Comp =>
     render() {
       return (
         <div onMouseLeave={this.onMouseLeave} onMouseEnter={this.onMouseEnter}>
-          <Comp isHovered={this.state.isHovered} />
+          <Comp {...this.props} isHovered={this.state.isHovered} />
         </div>
       );
     }

@@ -164,6 +164,7 @@ class App extends Component {
                 documents={this.state.documents}
                 loadDocument={this.loadDocument}
                 createDocument={this.createDocument}
+                currentDocument={this.state.currentDocument}
               />
               <div style={styles.documentWrapper}>
                 <DocumentViewer

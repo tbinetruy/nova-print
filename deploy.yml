@@ -9,10 +9,6 @@
       rsync_opts:
         - "--exclude=nova_print/db.sqlite3"
         - "--exclude=nova_print/static/js/frontend/node_modules"
-  - name: pip install requirements
-    become: yes
-    become_user: thomas
-    raw: pip install --user -r ~thomas/nova-print/nova_print/requirements.txt
   - name: python manage.py migrate
     raw: cd ~thomas/nova-print/nova_print && python manage.py migrate
     become: yes
@@ -21,3 +17,8 @@
     become: yes
     become_user: thomas
     raw: cd ~thomas/nova-print/nova_print && python manage.py collectstatic --noinput
+
+  - name: pip install requirements
+    become: yes
+    become_user: thomas
+    raw: pip install --user -r ~thomas/nova-print/nova_print/requirements.txt

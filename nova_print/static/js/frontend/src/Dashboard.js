@@ -140,7 +140,7 @@ const DocumentViewer = props => {
     },
     viewerWrapper: {
       display: "flex",
-      height: "60vh",
+      height: "calc(100vh - 11rem)",
     },
     flex1: {
       display: "flex",

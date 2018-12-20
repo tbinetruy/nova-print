@@ -1,4 +1,6 @@
 import React from "react";
+import {getThemeColor} from "./helpers.js";
+
 const Header = props => {
   const styles = {
     header: {

@@ -88,16 +88,14 @@ const DocumentList = props => {
         React.createElement(
           Hover(hoverProps => (
             <div
+              onClick={e => props.loadDocument(i)}
               style={{
                 ...styles.cellWrapper,
                 backgroundColor: `rgba(0, 0, 0, ${
                   hoverProps.isHovered ? 0.1 : 0
                 })`,
               }}>
-              <div
-                style={styles.cell}
-                key={i}
-                onClick={e => props.loadDocument(i)}>
+              <div style={styles.cell}>
                 {d.title}
                 {props.isHovered}
               </div>

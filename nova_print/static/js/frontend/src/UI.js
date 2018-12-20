@@ -20,4 +20,8 @@ const Button = Hover(props => {
   );
 });
 
+Button.defaultProps = {
+  color: "000000",
+};
+
 export {Button};

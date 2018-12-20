@@ -168,6 +168,7 @@ class App extends Component {
             />
             <div style={styles.dashboardWrapper}>
               <DocumentList
+                user={this.state.user}
                 documents={this.state.documents}
                 loadDocument={this.loadDocument}
                 createDocument={this.createDocument}

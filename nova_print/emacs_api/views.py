@@ -9,9 +9,18 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 
 from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
-from emacs_api.serializers import UserSerializer, DocumentSerializer, NestedDocumentSerializer
+from emacs_api.serializers import UserSerializer, DocumentSerializer, NestedDocumentSerializer, FigureSerializer
 from rest_framework.permissions import IsAuthenticated
-from emacs_api.models import Document
+from emacs_api.models import Document, Figure
+
+class FigureViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows users to be viewed or edited.
+    """
+    #permission_classes = (IsAuthenticated,)
+    queryset = Figure.objects.all()
+    serializer_class = FigureSerializer
+
 
 
 class UserViewSet(viewsets.ModelViewSet):

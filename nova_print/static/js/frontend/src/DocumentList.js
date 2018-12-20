@@ -3,6 +3,7 @@ import {colorList} from "./constants.js";
 import {Hover} from "./HOC.js";
 import {getThemeColor} from "./helpers.js";
 import {Button} from "./UI.js";
+import API from "./API.js";
 
 const cellStyle = {
   overflow: "hidden",
@@ -14,6 +15,35 @@ const cellStyle = {
   alignItems: "center",
   width: "100%",
 };
+
+class FileInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.fileInput = React.createRef();
+  }
+  async handleSubmit(event) {
+    event.preventDefault();
+    const file = this.fileInput.current.files[0];
+    console.log(file);
+    try {
+      const resp = await new API().createFigure(this.props.user.token, file);
+      const json = await resp.json();
+      console.log(json);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <input type="file" ref={this.fileInput} />
+        <button type="submit">uplaod</button>
+      </form>
+    );
+  }
+}
 
 const ListItem = Hover(props => {
   const styles = {
@@ -33,6 +63,7 @@ const ListItem = Hover(props => {
     imagesWrapper: {
       display: props.active ? "flex" : "none",
       flexDirection: "column",
+      width: "100%",
     },
     image: {
       ...cellStyle,
@@ -51,6 +82,7 @@ const ListItem = Hover(props => {
             {img.image.replace("figures/", "").substring(0, 10) + "..."}
           </span>
         ))}
+        <FileInput user={props.user} />
       </div>
     </div>
   );
@@ -92,6 +124,7 @@ const DocumentList = props => {
         )
         .map((d, i) => (
           <ListItem
+            user={props.user}
             active={d.pk == props.currentDocument.pk}
             document={d}
             key={i}

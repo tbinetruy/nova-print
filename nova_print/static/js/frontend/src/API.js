@@ -70,6 +70,33 @@ class API {
     return json;
   }
 
+  async createFigure(token, file, title = "") {
+    const url = `/api/figures/`;
+    const body = {
+      image: file,
+      title: title,
+    };
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("file", file);
+    formData.append("title", title);
+
+    const options = {
+      method: "POST",
+      headers: {
+        authorization: `Token ${token}`,
+        X_FILENAME: file.name,
+      },
+      body: formData,
+    };
+
+    try {
+      await fetch(url, options);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   async createDocument(user) {
     const defaultDocument = {
       title: "Title",

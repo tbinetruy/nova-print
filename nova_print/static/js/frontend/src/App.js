@@ -1,49 +1,8 @@
 import React, {Component} from "react";
 import "./App.css";
 import {colorList} from "./constants.js";
-import novaPrintScreenshot from "./img/nova-print-screenshot.png";
 import API from "./API.js";
-
-const Intro = props => {
-  const styles = {
-    wrapper: {
-      marginTop: "5rem",
-    },
-    screenshot: {
-      maxHeight: "50vh",
-    },
-  };
-  return (
-    <div style={styles.wrapper}>
-      <p>Welcome to Nova Print !! Here's what it looks like</p>
-      <img src={novaPrintScreenshot} style={styles.screenshot} />
-    </div>
-  );
-};
-
-const LoginForm = props => {
-  return (
-    <div className="wrapper">
-      <p>{props.errorMsg}</p>
-      <form onSubmit={props.onSubmit}>
-        <input
-          placeholder="Username"
-          name="username"
-          value={props.username}
-          onChange={e => props.onChange(e, "username")}
-        />
-        <input
-          placeholder="Password"
-          name="password"
-          type="password"
-          value={props.password}
-          onChange={e => props.onChange(e, "password")}
-        />
-        <button type="submit">Login</button>
-      </form>
-    </div>
-  );
-};
+import {Intro, LoginForm} from "./Home.js";
 
 const Hover = Comp =>
   class C extends Component {

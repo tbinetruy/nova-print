@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import "./App.css";
 import API from "./API.js";
 import {Intro, LoginForm} from "./Home.js";
-import {DocumentList, DocumentViewer, Header} from "./Dashboard.js";
+import {DocumentList, DocumentViewer} from "./Dashboard.js";
+import Header from "./Header.js";
 
 class App extends Component {
   constructor(props) {

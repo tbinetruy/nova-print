@@ -44,6 +44,11 @@ class API {
 
   async saveDocument(token, document) {
     const url = `/api/documents/${document.pk}/`;
+    const images = document.images.map(i => i.pk);
+    document = {
+      ...document,
+      images,
+    };
     const options = {
       method: "PUT",
       headers: {

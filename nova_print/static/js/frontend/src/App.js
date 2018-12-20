@@ -160,7 +160,11 @@ class App extends Component {
           </div>
         ) : (
           <div style={styles.pageWrapper}>
-            <Header username={this.state.username} logout={this.logout} />
+            <Header
+              color={this.state.currentDocument.theme_color}
+              username={this.state.username}
+              logout={this.logout}
+            />
             <div style={styles.dashboardWrapper}>
               <DocumentList
                 documents={this.state.documents}

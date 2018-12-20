@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import "./App.css";
+import {colorList} from "./constants.js";
 
 const clientId = "F9pKxCwq8n9mr41YwLjFjAoaXOL7FOs7rEvzirTA";
 const clientSecret =
@@ -173,11 +174,13 @@ const DocumentViewer = props => {
           <label style={styles.label} htmlFor="theme_color">
             Theme color:{" "}
           </label>
-          <input
-            name="theme_color"
-            value={props.document.theme_color}
+          <select
             onChange={e => props.updateDocument(e, "theme_color")}
-          />
+            value={props.document.theme_color}>
+            {colorList.map(c => (
+              <option value={c}>{c}</option>
+            ))}
+          </select>
         </div>
       </div>
       <div style={styles.viewerWrapper}>

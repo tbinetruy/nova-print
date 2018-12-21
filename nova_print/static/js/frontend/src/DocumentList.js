@@ -25,11 +25,13 @@ class FileInput extends React.Component {
   async handleSubmit(event) {
     event.preventDefault();
     const file = this.fileInput.current.files[0];
-    console.log(file);
     try {
-      const resp = await new API().createFigure(this.props.user.token, file);
-      const json = await resp.json();
-      console.log(json);
+      const resp = await new API().createFigure(
+        this.props.user.token,
+        this.props.currentDocument,
+        file,
+      );
+      await this.props.fetchDocuments();
     } catch (e) {
       console.log(e);
     }
@@ -82,7 +84,11 @@ const ListItem = Hover(props => {
             {img.image.replace("figures/", "").substring(0, 10) + "..."}
           </span>
         ))}
-        <FileInput user={props.user} />
+        <FileInput
+          user={props.user}
+          fetchDocuments={props.fetchDocuments}
+          currentDocument={props.currentDocument}
+        />
       </div>
     </div>
   );
@@ -124,8 +130,10 @@ const DocumentList = props => {
         )
         .map((d, i) => (
           <ListItem
+            fetchDocuments={props.fetchDocuments}
             user={props.user}
             active={d.pk == props.currentDocument.pk}
+            currentDocument={props.currentDocument}
             document={d}
             key={i}
             loadDocument={() => props.loadDocument(i)}

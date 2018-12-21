@@ -70,7 +70,7 @@ class API {
     return json;
   }
 
-  async createFigure(token, file, title = "") {
+  async createFigure(token, document, file, title = "") {
     const url = `/api/figures/`;
     const body = {
       image: file,
@@ -86,12 +86,20 @@ class API {
       headers: {
         authorization: `Token ${token}`,
         X_FILENAME: file.name,
+        //"Content-Type": "multipart/form-data",
       },
       body: formData,
     };
 
     try {
-      await fetch(url, options);
+      const resp = await fetch(url, options);
+      const json = await resp.json();
+      const new_document = {
+        ...document,
+        images: [...document.images, {pk: json.pk}],
+      };
+      // lol
+      await this.saveDocument(token, new_document);
     } catch (e) {
       console.log(e);
     }

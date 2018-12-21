@@ -204,15 +204,9 @@ const DocumentList = props => {
             document={d}
             key={i}
             loadDocument={() => props.loadDocument(i)}
-            color={props.color}
-            className={"doc wrapper"}>
+            color={props.color}>
             {d.images.map((img, i) => (
-              <ImageLine
-                className={"image line"}
-                styles={styles}
-                key={i}
-                img={img}
-              />
+              <ImageLine styles={styles} key={i} img={img} />
             ))}
           </ListItem>
         ))

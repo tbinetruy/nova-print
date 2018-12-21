@@ -44,12 +44,49 @@ class FileInput extends React.Component {
   }
 
   render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <input type="file" ref={this.fileInput} />
-        <button type="submit">uplaod</button>
-      </form>
-    );
+    const styles = {
+      wrapper: {
+        position: "relative",
+        height: "2rem",
+        overflow: "hidden",
+      },
+      input: {
+        cursor: "pointer",
+        opacity: 0,
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+      },
+      overlay: {
+        zIndex: -1,
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        right: 0,
+        left: 0,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      },
+    };
+    const Comp = Hover(({isHovered}) => (
+      <div
+        style={{
+          ...styles.wrapper,
+          backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.3 : 0})`,
+        }}>
+        <input
+          style={styles.input}
+          type="file"
+          ref={this.fileInput}
+          onChange={this.handleSubmit}
+        />
+        <Button style={styles.overlay} title="Add Figure" />
+      </div>
+    ));
+    return <Comp />;
   }
 }
 

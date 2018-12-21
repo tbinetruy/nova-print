@@ -28,7 +28,11 @@ const InputFileDumb = Hover(props => (
       ref={props.fileInput}
       onChange={props.handleSubmit}
     />
-    <Button style={props.styles.overlay} title="Add Figure" />
+    <Button
+      color={props.color}
+      style={props.styles.overlay}
+      title="Add Figure"
+    />
   </div>
 ));
 
@@ -73,9 +77,10 @@ class FileInput extends React.Component {
         bottom: 0,
         right: 0,
         left: 0,
+        zIndex: -1,
       },
       overlay: {
-        zIndex: -1,
+        pointEvent: "none",
         position: "absolute",
         top: 0,
         bottom: 0,
@@ -88,6 +93,7 @@ class FileInput extends React.Component {
     };
     return (
       <InputFileDumb
+        color={this.props.color}
         styles={styles}
         fileInput={this.fileInput}
         handleSubmit={this.handleSubmit}
@@ -137,6 +143,7 @@ const ListItem = Hover(props => {
       <div style={styles.imagesWrapper}>
         {props.children}
         <FileInput
+          color={props.color}
           user={props.user}
           fetchDocuments={props.fetchDocuments}
           currentDocument={props.currentDocument}

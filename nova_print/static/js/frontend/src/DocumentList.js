@@ -116,6 +116,17 @@ const ListItem = Hover(props => {
   };
   console.log(props.color, getThemeColor(props.color, 0.1));
 
+  const ImageLine = Hover(({isHovered, img}) => (
+    <span
+      style={{
+        ...styles.image,
+        backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.1 : 0})`,
+      }}
+      onClick={e => copyToClipboard(`[[./${img.image}]]`)}>
+      {img.image.replace("figures/", "").substring(0, 10) + "..."}
+    </span>
+  ));
+
   return (
     <div style={styles.cellWrapper}>
       <div onClick={props.loadDocument} style={styles.cell}>
@@ -123,12 +134,7 @@ const ListItem = Hover(props => {
       </div>
       <div style={styles.imagesWrapper}>
         {props.document.images.map((img, i) => (
-          <span
-            key={i}
-            style={styles.image}
-            onClick={e => copyToClipboard(`[[./${img.image}]]`)}>
-            {img.image.replace("figures/", "").substring(0, 10) + "..."}
-          </span>
+          <ImageLine key={i} img={img} />
         ))}
         <FileInput
           user={props.user}

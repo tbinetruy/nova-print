@@ -1,5 +1,4 @@
 function hexToRgb(hex) {
-  console.log(hex);
   var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -20,7 +19,6 @@ function getThemeColor(hex, opacity, inverse = false) {
 }
 
 const copyToClipboard = str => {
-  console.log("copying");
   var textField = document.createElement("textarea");
   textField.innerText = str;
   document.body.appendChild(textField);

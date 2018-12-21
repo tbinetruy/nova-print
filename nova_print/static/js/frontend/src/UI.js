@@ -7,7 +7,7 @@ const Button = Hover(props => {
     ...props.style,
     backgroundColor: getThemeColor(
       props.color,
-      props.isHovered ? 0.7 : 0,
+      props.isHovered ? 0.7 : 0.3,
       true,
     ),
     width: "100%",

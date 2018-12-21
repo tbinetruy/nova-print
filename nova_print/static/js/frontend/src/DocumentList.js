@@ -77,10 +77,10 @@ class FileInput extends React.Component {
         bottom: 0,
         right: 0,
         left: 0,
-        zIndex: -1,
       },
       overlay: {
         pointEvent: "none",
+        zIndex: -1,
         position: "absolute",
         top: 0,
         bottom: 0,
@@ -106,10 +106,10 @@ const ImageLine = Hover(({isHovered, img, styles}) => (
   <span
     style={{
       ...styles.image,
-      backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.1 : 0})`,
+      backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.1 : 0.3})`,
     }}
     onClick={e => copyToClipboard(`[[./${img.image}]]`)}>
-    {img.image.replace("figures/", "").substring(0, 10) + "..."}
+    {img.image.replace("figures/", "").substring(0, 18) + "..."}
   </span>
 ));
 
@@ -123,9 +123,14 @@ const ListItem = Hover(props => {
       cursor: "pointer",
       backgroundColor: getThemeColor(
         props.color,
-        props.isHovered ? 0.3 : props.active ? 0.2 : 0.1,
+        props.isHovered ? 0.3 : props.active ? 0.3 : 0.1,
       ),
       flexDirection: "column",
+    },
+    title: {
+      ...cellStyle,
+      height: "3rem",
+      backgroundColor: getThemeColor(props.color, props.active ? 0.5 : 0.2),
     },
     cell: cellStyle,
     imagesWrapper: {
@@ -137,7 +142,7 @@ const ListItem = Hover(props => {
 
   return (
     <div style={styles.cellWrapper}>
-      <div onClick={props.loadDocument} style={styles.cell}>
+      <div onClick={props.loadDocument} style={styles.title}>
         {props.document ? props.document.title : 0}
       </div>
       <div style={styles.imagesWrapper}>
@@ -185,6 +190,11 @@ const DocumentList = props => {
 
     image: {
       ...cellStyle,
+      color: "white",
+      fontSize: "0.8rem",
+      justifyContent: "flex-start",
+      paddingLeft: "1rem",
+      boxSizing: "border-box",
     },
   };
 

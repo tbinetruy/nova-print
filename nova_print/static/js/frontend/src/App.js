@@ -36,6 +36,9 @@ class App extends Component {
     this.fetchDocuments = this.fetchDocuments.bind(this);
     this.compileDocument = this.compileDocument.bind(this);
     this.getCurrentDocumentPk = this.getCurrentDocumentPk.bind(this);
+    this.updateCurrentDocumentImages = this.updateCurrentDocumentImages.bind(
+      this,
+    );
   }
   async createDocument() {
     try {
@@ -131,6 +134,14 @@ class App extends Component {
     }
     console.log("Done compiling");
   }
+  updateCurrentDocumentImages(images) {
+    this.setState({
+      currentDocument: {
+        ...this.state.currentDocument,
+        images,
+      },
+    });
+  }
   render() {
     const styles = {
       dashboardWrapper: {
@@ -168,6 +179,7 @@ class App extends Component {
             />
             <div style={styles.dashboardWrapper}>
               <DocumentList
+                updateCurrentDocumentImages={this.updateCurrentDocumentImages}
                 fetchDocuments={this.fetchDocuments}
                 user={this.state.user}
                 documents={this.state.documents}

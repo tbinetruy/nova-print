@@ -32,6 +32,12 @@ class FileInput extends React.Component {
         file,
       );
       await this.props.fetchDocuments();
+      console.log(this.props.documents, this.props.currentDocument.pk);
+      this.props.updateCurrentDocumentImages(
+        this.props.documents.filter(
+          d => d.pk == this.props.currentDocument.pk,
+        )[0].images,
+      );
     } catch (e) {
       console.log(e);
     }
@@ -88,6 +94,8 @@ const ListItem = Hover(props => {
           user={props.user}
           fetchDocuments={props.fetchDocuments}
           currentDocument={props.currentDocument}
+          documents={props.documents}
+          updateCurrentDocumentImages={props.updateCurrentDocumentImages}
         />
       </div>
     </div>
@@ -130,6 +138,8 @@ const DocumentList = props => {
         )
         .map((d, i) => (
           <ListItem
+            documents={props.documents}
+            updateCurrentDocumentImages={props.updateCurrentDocumentImages}
             fetchDocuments={props.fetchDocuments}
             user={props.user}
             active={d.pk == props.currentDocument.pk}

@@ -16,6 +16,22 @@ const cellStyle = {
   width: "100%",
 };
 
+const InputFileDumb = Hover(props => (
+  <div
+    style={{
+      ...props.styles.wrapper,
+      backgroundColor: `rgba(0, 0, 0, ${props.isHovered ? 0.3 : 0})`,
+    }}>
+    <input
+      style={props.styles.input}
+      type="file"
+      ref={props.fileInput}
+      onChange={props.handleSubmit}
+    />
+    <Button style={props.styles.overlay} title="Add Figure" />
+  </div>
+));
+
 class FileInput extends React.Component {
   constructor(props) {
     super(props);
@@ -32,7 +48,6 @@ class FileInput extends React.Component {
         file,
       );
       await this.props.fetchDocuments();
-      console.log(this.props.documents, this.props.currentDocument.pk);
       this.props.updateCurrentDocumentImages(
         this.props.documents.filter(
           d => d.pk == this.props.currentDocument.pk,
@@ -71,24 +86,26 @@ class FileInput extends React.Component {
         alignItems: "center",
       },
     };
-    const Comp = Hover(({isHovered}) => (
-      <div
-        style={{
-          ...styles.wrapper,
-          backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.3 : 0})`,
-        }}>
-        <input
-          style={styles.input}
-          type="file"
-          ref={this.fileInput}
-          onChange={this.handleSubmit}
-        />
-        <Button style={styles.overlay} title="Add Figure" />
-      </div>
-    ));
-    return <Comp />;
+    return (
+      <InputFileDumb
+        styles={styles}
+        fileInput={this.fileInput}
+        handleSubmit={this.handleSubmit}
+      />
+    );
   }
 }
+
+const ImageLine = Hover(({isHovered, img, styles}) => (
+  <span
+    style={{
+      ...styles.image,
+      backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.1 : 0})`,
+    }}
+    onClick={e => copyToClipboard(`[[./${img.image}]]`)}>
+    {img.image.replace("figures/", "").substring(0, 10) + "..."}
+  </span>
+));
 
 const ListItem = Hover(props => {
   const styles = {
@@ -110,22 +127,7 @@ const ListItem = Hover(props => {
       flexDirection: "column",
       width: "100%",
     },
-    image: {
-      ...cellStyle,
-    },
   };
-  console.log(props.color, getThemeColor(props.color, 0.1));
-
-  const ImageLine = Hover(({isHovered, img}) => (
-    <span
-      style={{
-        ...styles.image,
-        backgroundColor: `rgba(0, 0, 0, ${isHovered ? 0.1 : 0})`,
-      }}
-      onClick={e => copyToClipboard(`[[./${img.image}]]`)}>
-      {img.image.replace("figures/", "").substring(0, 10) + "..."}
-    </span>
-  ));
 
   return (
     <div style={styles.cellWrapper}>
@@ -133,9 +135,7 @@ const ListItem = Hover(props => {
         {props.document ? props.document.title : 0}
       </div>
       <div style={styles.imagesWrapper}>
-        {props.document.images.map((img, i) => (
-          <ImageLine key={i} img={img} />
-        ))}
+        {props.children}
         <FileInput
           user={props.user}
           fetchDocuments={props.fetchDocuments}
@@ -175,6 +175,10 @@ const DocumentList = props => {
     button: {
       ...cellStyle,
     },
+
+    image: {
+      ...cellStyle,
+    },
   };
 
   const list = props.documents
@@ -194,7 +198,16 @@ const DocumentList = props => {
             key={i}
             loadDocument={() => props.loadDocument(i)}
             color={props.color}
-          />
+            className={"doc wrapper"}>
+            {d.images.map((img, i) => (
+              <ImageLine
+                className={"image line"}
+                styles={styles}
+                key={i}
+                img={img}
+              />
+            ))}
+          </ListItem>
         ))
     : "";
 

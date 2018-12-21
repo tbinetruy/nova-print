@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {colorList} from "./constants.js";
 import {Hover} from "./HOC.js";
-import {getThemeColor} from "./helpers.js";
+import {getThemeColor, copyToClipboard} from "./helpers.js";
 import {Button} from "./UI.js";
 import API from "./API.js";
 
@@ -78,16 +78,6 @@ const ListItem = Hover(props => {
     },
   };
   console.log(props.color, getThemeColor(props.color, 0.1));
-
-  const copyToClipboard = str => {
-    console.log("copying");
-    var textField = document.createElement("textarea");
-    textField.innerText = str;
-    document.body.appendChild(textField);
-    textField.select();
-    document.execCommand("copy");
-    textField.remove();
-  };
 
   return (
     <div style={styles.cellWrapper}>

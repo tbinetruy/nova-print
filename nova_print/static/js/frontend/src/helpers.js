@@ -19,4 +19,14 @@ function getThemeColor(hex, opacity, inverse = false) {
   return rgb;
 }
 
-export {getThemeColor};
+const copyToClipboard = str => {
+  console.log("copying");
+  var textField = document.createElement("textarea");
+  textField.innerText = str;
+  document.body.appendChild(textField);
+  textField.select();
+  document.execCommand("copy");
+  textField.remove();
+};
+
+export {getThemeColor, copyToClipboard};
